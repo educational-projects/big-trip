@@ -17,23 +17,27 @@ const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filt
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 
+const renderPosition = {
+  AFTERBEGIN: 'afterbegin',
+  BEFOREEND: 'beforeend',
+};
+
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(siteTripElement, createRouteAndPriceTemplate(), 'afterbegin');
-render(siteNavigationElement, createMenuTemplate(), 'beforeend');
-render(siteFiltersElement, createFiltersTemplate(), 'beforeend');
-render(siteTripEventElement, createSortingTemplate(), 'beforeend');
-render(siteTripEventElement, createTripEventListTemplate(), 'beforeend');
+render(siteTripElement, createRouteAndPriceTemplate(), renderPosition.AFTERBEGIN);
+render(siteNavigationElement, createMenuTemplate(), renderPosition.BEFOREEND);
+render(siteFiltersElement, createFiltersTemplate(), renderPosition.BEFOREEND);
+render(siteTripEventElement, createSortingTemplate(), renderPosition.BEFOREEND);
+render(siteTripEventElement, createTripEventListTemplate(), renderPosition.BEFOREEND);
 const siteTripList = siteTripEventElement.querySelector('.trip-events__list');
-render(siteTripList, createEditPointForm(), 'beforeend');
+render(siteTripList, createEditPointForm(), renderPosition.BEFOREEND);
 // render(siteTripList, createTripEventTemplate(), 'beforeend');
 // render(siteTripList, createTripEventTemplate(), 'beforeend');
 // render(siteTripList, createTripEventTemplate(), 'beforeend');
 
 for (let i = 0; i < TASK_COUNT; i++) {
-  render(siteTripList, createTripEventTemplate(tasks[i]), 'beforeend');
-  console.log(tasks[i]);
+  render(siteTripList, createTripEventTemplate(tasks[i]), renderPosition.BEFOREEND);
 }
