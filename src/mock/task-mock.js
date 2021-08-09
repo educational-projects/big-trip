@@ -1,45 +1,27 @@
 import dayjs from 'dayjs';
 
-// Функция из интернета по генерации случайного числа из диапазона
-// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
+//тип точки маршрута
+const TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+//список городов путешествия
+const CITIES = ['Петрозаводск', 'Сегежа', 'Кондопога', 'Олонец', 'Сортовала'];
 
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-//Генерация даты
-// const generateDate = () => {
-//   const maxDaysGap = 500;
-//   const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
-//   return dayjs().add(daysGap, 'm').toDate();
-// };
-
-//постарайся привести, что бы каждая новая дата была больше предыдущей. В рамках одной точки, это должно быть легко,
-const generateDate = () => {
-  const startDate = dayjs();
-  const diffTime = startDate.date() + getRandomInteger(60, 2880);
-  const endDate = dayjs().add(diffTime, 'm').toDate();
-
-  return {
-    startDate,
-    endDate,
-  };
-};
-
-// Генерация типа точки маршрута
-const generateType = () => {
-  const type = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
-
-  const randomIndex = getRandomInteger(0, type.length -1);
-
-  return type[randomIndex];
-};
-
+//описание городов
+const DESTINATION_DESCRIPTION = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  'Cras aliquet varius magna, non porta ligula feugiat eget.',
+  'Fusce tristique felis at fermentum pharetra.',
+  'Aliquam id orci ut lectus varius viverra.',
+  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
+  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
+  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
+  'Sed sed nisi sed augue convallis suscipit in sed felis.',
+  'Aliquam erat volutpat.',
+  'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
+];
+//описание фотографий
+const PICKTYRES_DESCRIPTION = ['картинка1', 'картинка2', 'картинка3'];
 // Дополнительные опции
-const OFFERS_BY_TYPE = {
+const OffersByType = {
   Taxi: [
     {
       title: 'Upgrade to a business class',
@@ -134,37 +116,48 @@ const OFFERS_BY_TYPE = {
   ],
 };
 
+// Функция из интернета по генерации случайного числа из диапазона
+// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
+const getRandomInteger = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return Math.floor(lower + Math.random() * (upper - lower + 1));
+};
+
+//случайная генерация даты окончания точки путешествия
+const generateDate = () => {
+  const startDate = dayjs();
+  const diffTime = startDate.date() + getRandomInteger(60, 2880);
+  const endDate = dayjs().add(diffTime, 'm').toDate();
+
+  return {
+    startDate,
+    endDate,
+  };
+};
+
+// Генерация типа точки маршрута
+const generateType = () => {
+  const randomIndex = getRandomInteger(0, TYPE.length -1);
+
+  return TYPE[randomIndex];
+};
+
 const generateOffers = (type, offersPoint) => {
-  const offers = offersPoint[type.toString()];
+  const offers = offersPoint[type];
   return offers;
 };
 
 // Генерация города
 const generateDestinationCity = () => {
-  const citys = ['Петрозаводск', 'Сегежа', 'Кондопога', 'Олонец', 'Сортовала'];
+  const randomIndex = getRandomInteger(0, CITIES.length -1);
 
-  const randomIndex = getRandomInteger(0, citys.length -1);
-
-  return citys[randomIndex];
+  return CITIES[randomIndex];
 };
-
-const DESTINATION_DESCRIPTION = [
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  'Cras aliquet varius magna, non porta ligula feugiat eget.',
-  'Fusce tristique felis at fermentum pharetra.',
-  'Aliquam id orci ut lectus varius viverra.',
-  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
-  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
-  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
-  'Sed sed nisi sed augue convallis suscipit in sed felis.',
-  'Aliquam erat volutpat.',
-  'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.',
-];
 
 // Генерация описания картинки
 const generatePictyreDescription = () => {
-  const PICKTYRES_DESCRIPTION = ['картинка1', 'картинка2', 'картинка3'];
-
   const randomIndex = getRandomInteger(0, PICKTYRES_DESCRIPTION.length -1);
 
   return PICKTYRES_DESCRIPTION[randomIndex];
@@ -181,7 +174,7 @@ export const generateTask = () => {
   return {
     type: type,
     basePrice: getRandomInteger(1, 100),
-    offer: generateOffers(type, OFFERS_BY_TYPE),
+    offer: generateOffers(type, OffersByType),
     dateFrom: data.startDate,
     dateTo: data.endDate,
     destination: {
