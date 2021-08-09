@@ -18,7 +18,7 @@ export const createTripEventTemplate = (task) => {
 
     const renderDiffTime = (time, text) => time !== 0 ? `${time}${text}` : '';
 
-    return `${renderDiffTime(daysDiff, 'D')} ${renderDiffTime(hoursDiff, 'H')} ${renderDiffTime(minutesDiff, 'M')}`;
+    return `${renderDiffTime(daysDiff, 'D')} ${renderDiffTime(hoursDiff - daysDiff * 24, 'H')} ${renderDiffTime(minutesDiff - hoursDiff * 60, 'M')}`;
   };
 
   const getTimeWay = test(dateTo, dateFrom);
