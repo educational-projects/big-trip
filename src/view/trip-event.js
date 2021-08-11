@@ -9,7 +9,7 @@ export const createTripEventTemplate = (task) => {
   const dateToInDatetime = dayjs(dateTo).format('YYYY-MM-DDTHH:mm');
   const dateFromInDatetime = dayjs(dateFrom).format('YYYY-MM-DDTHH:mm');
 
-  const test = (date1, date2) => {
+  const getDiffTime = (date1, date2) => {
     const date11 = dayjs(date1);
     const date22 = dayjs(date2);
     const daysDiff = date11.diff(date22, 'd');
@@ -21,7 +21,7 @@ export const createTripEventTemplate = (task) => {
     return `${renderDiffTime(daysDiff, 'D')} ${renderDiffTime(hoursDiff - daysDiff * 24, 'H')} ${renderDiffTime(minutesDiff - hoursDiff * 60, 'M')}`;
   };
 
-  const getTimeWay = test(dateTo, dateFrom);
+  const getTimeWay = getDiffTime(dateTo, dateFrom);
 
   //проверка на фаворитность
   const checkFavorite = () => isFavorite ? 'event__favorite-btn--active' : '';
@@ -39,7 +39,7 @@ export const createTripEventTemplate = (task) => {
   <div class="event">
     <time class="event__date" datetime="2019-03-18">${dateToInMonthAndDay}</time>
     <div class="event__type">
-      <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+      <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type} icon">
     </div>
     <h3 class="event__title">${type} to ${destination.city}</h3>
     <div class="event__schedule">

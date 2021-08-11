@@ -33,8 +33,13 @@ render(siteFiltersElement, createFiltersTemplate(), renderPosition.BEFOREEND);
 render(siteTripEventElement, createSortingTemplate(), renderPosition.BEFOREEND);
 render(siteTripEventElement, createTripEventListTemplate(), renderPosition.BEFOREEND);
 const siteTripList = siteTripEventElement.querySelector('.trip-events__list');
-render(siteTripList, createEditPointForm(), renderPosition.BEFOREEND);
+render(siteTripList, createEditPointForm(tasks[0]), renderPosition.BEFOREEND);
 
 tasks.forEach((point) => {
   render(siteTripList, createTripEventTemplate(point), renderPosition.BEFOREEND);
 });
+
+generateTask();
+console.log(tasks);
+
+//РАЗОБРАТЬСЯ С ПУТЯМИ ИКОНОК
