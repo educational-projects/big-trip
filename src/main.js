@@ -41,5 +41,3 @@ tasks.forEach((point) => {
 
 generateTask();
 console.log(tasks);
-
-//РАЗОБРАТЬСЯ С ПУТЯМИ ИКОНОК
