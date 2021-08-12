@@ -167,7 +167,7 @@ const generatePictyreDescription = () => {
 const DESTINATION_PHOTO = 'http://picsum.photos/248/152?r=';
 
 //Генерация данных
-export const generateTask = () => {
+const generateTask = () => {
   const data = generateDate();
   const type = generateType();
 
@@ -178,7 +178,7 @@ export const generateTask = () => {
     dateFrom: data.startDate,
     dateTo: data.endDate,
     destination: {
-      description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)),
+      description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
       city: generateDestinationCity(),
       pictures: [
         {
@@ -190,3 +190,5 @@ export const generateTask = () => {
     isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };
+
+export {generateTask, TYPE, CITIES};
