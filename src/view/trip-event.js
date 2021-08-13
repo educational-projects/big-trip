@@ -10,11 +10,11 @@ export const createTripEventTemplate = (task) => {
   const dateFromInDatetime = dayjs(dateFrom).format('YYYY-MM-DDTHH:mm');
 
   const getDiffTime = (date1, date2) => {
-    const date11 = dayjs(date1);
-    const date22 = dayjs(date2);
-    const daysDiff = date11.diff(date22, 'd');
-    const hoursDiff = date11.diff(date22, 'h');
-    const minutesDiff = date11.diff(date22, 'm');
+    const dateEnd = dayjs(date1);
+    const dateStart = dayjs(date2);
+    const daysDiff = dateEnd.diff(dateStart, 'd');
+    const hoursDiff = dateEnd.diff(dateStart, 'h');
+    const minutesDiff = dateEnd.diff(dateStart, 'm');
 
     const renderDiffTime = (time, text) => time !== 0 ? `${time}${text}` : '';
 
