@@ -1,12 +1,12 @@
-import { createEditPointForm } from './view/edit-point.js';
-import { createFiltersTemplate } from './view/filters.js';
-import { createRouteAndPriceTemplate } from './view/route-and-price.js';
-import { createSortingTemplate } from './view/sorting.js';
-import { createTripEventListTemplate } from './view/trip-event-list.js';
-import { createTripEventTemplate } from './view/trip-event.js';
-import {createMenuTemplate} from './view/trip-mune.js';
+import EditEventView from './view/edit-point.js';
+import FilterView from './view/filters.js';
+import SiteMenuView from './view/trip-mune.js';
+import RouteAndPriceView from './view/route-and-price.js';
+import SortingView from './view/sorting.js';
+import TripEventListView from './view/trip-event-list.js';
+import TripEventView from './view/trip-event.js';
 import { generateTask } from './mock/task-mock.js';
-import {render, RenderPosition} from './utils.js';
+import {RenderPosition, renderElement} from './utils.js';
 
 const TASK_COUNT = 15;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
@@ -18,14 +18,16 @@ const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filt
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 
-render(siteTripElement, createRouteAndPriceTemplate(), RenderPosition.AFTERBEGIN);
-render(siteNavigationElement, createMenuTemplate(), RenderPosition.BEFOREEND);
-render(siteFiltersElement, createFiltersTemplate(), RenderPosition.BEFOREEND);
-render(siteTripEventElement, createSortingTemplate(), RenderPosition.BEFOREEND);
-render(siteTripEventElement, createTripEventListTemplate(), RenderPosition.BEFOREEND);
-const siteTripList = siteTripEventElement.querySelector('.trip-events__list');
-render(siteTripList, createEditPointForm(tasks[0]), RenderPosition.BEFOREEND);
+renderElement(siteTripElement, new RouteAndPriceView().getElement(), RenderPosition.AFTERBEGIN);
+renderElement(siteNavigationElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
+renderElement(siteFiltersElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
+renderElement(siteTripEventElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
+
+const eventList = new TripEventListView();
+renderElement(siteTripEventElement, eventList.getElement(), RenderPosition.BEFOREEND);
+
+renderElement(eventList.getElement(), new EditEventView(tasks[0]).getElement(), RenderPosition.BEFOREEND);
 
 tasks.forEach((point) => {
-  render(siteTripList, createTripEventTemplate(point), RenderPosition.BEFOREEND);
+  renderElement(eventList.getElement(), new TripEventView(point).getElement(), RenderPosition.BEFOREEND);
 });
