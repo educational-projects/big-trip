@@ -5,7 +5,7 @@ export const RenderPosition = {
 };
 
 //добавление элемента в контейнер в зависимости от позиционирования
-export const renderElement = (container, element, place) => {
+export const render = (container, element, place) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
