@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { CITIES, TYPE } from '../mock/task-mock';
+import { createElement } from '../utils';
 
 //генерация дополнительных опций
 const createAdditionalOffer = (offers) => {
@@ -39,7 +40,7 @@ const createEventTypeList = () => (
   )).join('')
 );
 
-export const createEditPointForm = (task) => {
+const createEditPointForm = (task) => {
   const {type, basePrice, dateFrom, dateTo, destination, offer} = task;
 
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
@@ -54,7 +55,8 @@ export const createEditPointForm = (task) => {
   //генерация дополнительных опций
   const additionalOffers = createAdditionalOffer(offer);
 
-  return `<form class="event event--edit" action="#" method="post">
+  return `<li class="trip-events__item">
+  <form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -112,5 +114,30 @@ export const createEditPointForm = (task) => {
       <p class="event__destination-description">${destination.description}</p>
     </section>
   </section>
-</form>`;
+</form>
+</li>`;
 };
+
+export default class EditEvent {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditPointForm(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
