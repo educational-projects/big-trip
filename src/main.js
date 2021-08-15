@@ -9,7 +9,7 @@ import TripEventView from './view/trip-event.js';
 import { generateTask } from './mock/task-mock.js';
 import {RenderPosition, render} from './utils.js';
 
-const TASK_COUNT = 0;
+const TASK_COUNT = 15;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
@@ -68,8 +68,9 @@ const checkAndRenderTemplate = (eventData) => {
     };
 
     eventData.forEach((event) => renderEvent(eventList.getElement(), event));
+  } else {
+    render(siteTripEventElement, new EmptyListView().getElement(), RenderPosition.BEFOREEND);
   }
-  render(siteTripEventElement, new EmptyListView().getElement(), RenderPosition.BEFOREEND);
 };
 
 checkAndRenderTemplate(tasks);
