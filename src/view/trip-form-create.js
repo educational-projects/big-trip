@@ -1,4 +1,4 @@
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 const createTripFormCreateTemplate = () => (
   `<li class="trip-events__item">
@@ -170,24 +170,8 @@ const createTripFormCreateTemplate = () => (
 </li>`
 );
 
-export default class CreateEvent {
-  constructor() {
-    this._element = null;
-  }
-
+export default class CreateEvent extends AbstractView {
   getTemplate() {
     return createTripFormCreateTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

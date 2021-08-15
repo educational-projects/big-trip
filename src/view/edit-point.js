@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { CITIES, TYPE } from '../mock/task-mock';
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 //генерация дополнительных опций
 const createAdditionalOffer = (offers) => {
@@ -118,26 +118,13 @@ const createEditPointForm = (task) => {
 </li>`;
 };
 
-export default class EditEvent {
+export default class EditEvent extends AbstractView {
   constructor(task) {
+    super();
     this._task = task;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createEditPointForm(this._task);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
