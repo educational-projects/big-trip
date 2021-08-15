@@ -9,7 +9,7 @@ import TripEventView from './view/trip-event.js';
 import { generateTask } from './mock/task-mock.js';
 import {RenderPosition, render} from './utils.js';
 
-const TASK_COUNT = 15;
+const TASK_COUNT = 0;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
@@ -22,51 +22,55 @@ const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 render(siteNavigationElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
 render(siteFiltersElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
 
-if (tasks.length) {
-  render(siteTripElement, new RouteAndPriceView().getElement(), RenderPosition.AFTERBEGIN);
-  render(siteTripEventElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
+const checkAndRenderTemplate = (eventData) => {
+  if (tasks.length) {
+    render(siteTripElement, new RouteAndPriceView().getElement(), RenderPosition.AFTERBEGIN);
+    render(siteTripEventElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
 
-  const eventList = new TripEventListView();
-  render(siteTripEventElement, eventList.getElement(), RenderPosition.BEFOREEND);
+    const eventList = new TripEventListView();
+    render(siteTripEventElement, eventList.getElement(), RenderPosition.BEFOREEND);
 
-  const renderEvent = (position, eventTask) => {
-    const eventComponent = new TripEventView(eventTask);
-    const eventEditComponent = new EditEventView(eventTask);
+    const renderEvent = (position, eventTask) => {
+      const eventComponent = new TripEventView(eventTask);
+      const eventEditComponent = new EditEventView(eventTask);
 
-    const replacePointToForm = () => {
-      position.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
-    };
+      const replacePointToForm = () => {
+        position.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+      };
 
-    const replaceFormToPoint = () => {
-      position.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
-    };
+      const replaceFormToPoint = () => {
+        position.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+      };
 
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
+      const onEscKeyDown = (evt) => {
+        if (evt.key === 'Escape' || evt.key === 'Esc') {
+          evt.preventDefault();
+          replaceFormToPoint();
+          document.removeEventListener('keydown', onEscKeyDown);
+        }
+      };
 
-    eventComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replacePointToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-      eventEditComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
+      eventComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+        replacePointToForm();
+        document.addEventListener('keydown', onEscKeyDown);
+        eventEditComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
+          evt.preventDefault();
+          replaceFormToPoint();
+        });
+      });
+
+      eventEditComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
         evt.preventDefault();
         replaceFormToPoint();
       });
-    });
 
-    eventEditComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-    });
+      render(position, eventComponent.getElement(), RenderPosition.BEFOREEND);
+    };
 
-    render(position, eventComponent.getElement(), RenderPosition.BEFOREEND);
-  };
-
-  tasks.forEach((event) => renderEvent(eventList.getElement(), event));
-} else {
+    eventData.forEach((event) => renderEvent(eventList.getElement(), event));
+  }
   render(siteTripEventElement, new EmptyListView().getElement(), RenderPosition.BEFOREEND);
-}
+};
+
+checkAndRenderTemplate(tasks);
+
