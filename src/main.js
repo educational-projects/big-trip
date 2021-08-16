@@ -61,6 +61,7 @@ const checkAndRenderTemplate = (eventData) => {
 
       eventEditComponent.setSubmitClickHandler(() => {
         replaceFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
       });
 
       render(position, eventComponent, RenderPosition.BEFOREEND);
