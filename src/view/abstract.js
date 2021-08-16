@@ -1,12 +1,13 @@
-import { createElement } from '../utils';
+import { createElement } from '../utils/redner.js';
 
 export default class Abstract {
-  constructor(task) {
+  constructor() {
     if ( new.target === Abstract) {
       throw new Error('Can\'t instantiate Abstract, only concrete one.');
     }
 
-    this._task = task;
+    this._element = null;
+    this._callback = {};
   }
 
   getTemplate() {

@@ -7,7 +7,7 @@ import TripEventListView from './view/trip-event-list.js';
 import EmptyListView from './view/empty-list.js';
 import TripEventView from './view/trip-event.js';
 import { generateTask } from './mock/task-mock.js';
-import {RenderPosition, render} from './utils.js';
+import { render, RenderPosition, replace} from './utils/redner.js';
 
 const TASK_COUNT = 15;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
@@ -19,27 +19,27 @@ const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filt
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 
-render(siteNavigationElement, new SiteMenuView().getElement(), RenderPosition.BEFOREEND);
-render(siteFiltersElement, new FilterView().getElement(), RenderPosition.BEFOREEND);
+render(siteNavigationElement, new SiteMenuView(), RenderPosition.BEFOREEND);
+render(siteFiltersElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const checkAndRenderTemplate = (eventData) => {
   if (tasks.length) {
-    render(siteTripElement, new RouteAndPriceView().getElement(), RenderPosition.AFTERBEGIN);
-    render(siteTripEventElement, new SortingView().getElement(), RenderPosition.BEFOREEND);
+    render(siteTripElement, new RouteAndPriceView(), RenderPosition.AFTERBEGIN);
+    render(siteTripEventElement, new SortingView(), RenderPosition.BEFOREEND);
 
     const eventList = new TripEventListView();
-    render(siteTripEventElement, eventList.getElement(), RenderPosition.BEFOREEND);
+    render(siteTripEventElement, eventList, RenderPosition.BEFOREEND);
 
     const renderEvent = (position, eventTask) => {
       const eventComponent = new TripEventView(eventTask);
       const eventEditComponent = new EditEventView(eventTask);
 
       const replacePointToForm = () => {
-        position.replaceChild(eventEditComponent.getElement(), eventComponent.getElement());
+        replace(eventEditComponent, eventComponent);
       };
 
       const replaceFormToPoint = () => {
-        position.replaceChild(eventComponent.getElement(), eventEditComponent.getElement());
+        replace(eventComponent, eventEditComponent);
       };
 
       const onEscKeyDown = (evt) => {
@@ -50,26 +50,25 @@ const checkAndRenderTemplate = (eventData) => {
         }
       };
 
-      eventComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+      eventComponent.setEditClickHandler(() => {
         replacePointToForm();
         document.addEventListener('keydown', onEscKeyDown);
-        eventEditComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
-          evt.preventDefault();
-          replaceFormToPoint();
-        });
       });
 
-      eventEditComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
-        evt.preventDefault();
+      eventEditComponent.setCloseClickHandler(() => {
         replaceFormToPoint();
       });
 
-      render(position, eventComponent.getElement(), RenderPosition.BEFOREEND);
+      eventEditComponent.setSubmitClickHandler(() => {
+        replaceFormToPoint();
+      });
+
+      render(position, eventComponent, RenderPosition.BEFOREEND);
     };
 
-    eventData.forEach((event) => renderEvent(eventList.getElement(), event));
+    eventData.forEach((event) => renderEvent(eventList, event));
   } else {
-    render(siteTripEventElement, new EmptyListView().getElement(), RenderPosition.BEFOREEND);
+    render(siteTripEventElement, new EmptyListView(), RenderPosition.BEFOREEND);
   }
 };
 
