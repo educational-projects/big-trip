@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomInteger } from '../utils.js';
+import { getRandomInteger } from '../utils/common.js';
 
 //тип точки маршрута
 const TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];

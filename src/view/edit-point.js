@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { CITIES, TYPE } from '../mock/task-mock';
-import { createElement } from '../utils';
+import AbstractView from './abstract';
 
 //генерация дополнительных опций
 const createAdditionalOffer = (offers) => {
@@ -118,26 +118,36 @@ const createEditPointForm = (task) => {
 </li>`;
 };
 
-export default class EditEvent {
+export default class EditEvent extends AbstractView {
   constructor(task) {
+    super();
     this._task = task;
 
-    this._element = null;
+    this._closeClickHandler = this._closeClickHandler.bind(this);
+    this._submitClickHandler = this._submitClickHandler.bind(this);
   }
 
   getTemplate() {
     return createEditPointForm(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _closeClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.closeClick();
   }
 
-  removeElement() {
-    this._element = null;
+  setCloseClickHandler(callback) {
+    this._callback.closeClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+  }
+
+  _submitClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.submitClick();
+  }
+
+  setSubmitClickHandler(callback) {
+    this._callback.submitClick = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
   }
 }
