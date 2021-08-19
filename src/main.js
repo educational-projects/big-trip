@@ -1,6 +1,6 @@
 import EditEventView from './view/edit-point.js';
 import FilterView from './view/filters.js';
-import SiteMenuView from './view/trip-mune.js';
+import SiteMenuView from './view/trip-menu.js';
 import RouteAndPriceView from './view/route-and-price.js';
 import SortingView from './view/sorting.js';
 import TripEventListView from './view/trip-event-list.js';
@@ -9,7 +9,7 @@ import TripEventView from './view/trip-event.js';
 import { generateTask } from './mock/task-mock.js';
 import { render, RenderPosition, replace} from './utils/redner.js';
 
-const TASK_COUNT = 15;
+const TASK_COUNT = 3;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
@@ -24,7 +24,7 @@ render(siteFiltersElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const checkAndRenderTemplate = (eventData) => {
   if (tasks.length) {
-    render(siteTripElement, new RouteAndPriceView(), RenderPosition.AFTERBEGIN);
+    render(siteTripElement, new RouteAndPriceView(eventData), RenderPosition.AFTERBEGIN);
     render(siteTripEventElement, new SortingView(), RenderPosition.BEFOREEND);
 
     const eventList = new TripEventListView();
