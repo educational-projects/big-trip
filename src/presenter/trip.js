@@ -2,9 +2,8 @@ import RouteAndPriceView from '../view/route-and-price';
 import TripEventListView from '../view/trip-event-list';
 import SortingView from '../view/sorting';
 import EmptyListView from '../view/empty-list';
-import TripEventView from '../view/trip-event';
-import EditEventView from '../view/edit-point';
-import { render, RenderPosition, replace } from '../utils/redner';
+import { render, RenderPosition } from '../utils/redner';
+import PointPresenter from './point';
 
 export default class Trip {
   constructor(tripContainer, routContainer) {
@@ -34,40 +33,8 @@ export default class Trip {
 
   _renderEvent(event) {
     //метод для рендеринга точки маршрута
-    const eventComponent = new TripEventView(event);
-    const eventEditComponent = new EditEventView(event);
-
-    const replacePointToForm = () => {
-      replace(eventEditComponent, eventComponent);
-    };
-
-    const replaceFormToPoint = () => {
-      replace(eventComponent, eventEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    eventComponent.setEditClickHandler(() => {
-      replacePointToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    eventEditComponent.setCloseClickHandler(() => {
-      replaceFormToPoint();
-    });
-
-    eventEditComponent.setSubmitClickHandler(() => {
-      replaceFormToPoint();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    render(this._tripListComponent, eventComponent, RenderPosition.BEFOREEND);
+    const pointPresenter = new PointPresenter(this._tripListComponent);
+    pointPresenter.init(event);
   }
 
   _renderEnents() {
