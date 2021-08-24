@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import  { nanoid } from 'nanoid';
 import { getRandomInteger } from '../utils/common.js';
 
 //тип точки маршрута
@@ -165,6 +166,7 @@ const generateTask = () => {
 
   return {
     type: type,
+    id: nanoid(),
     basePrice: getRandomInteger(1, 100),
     offer: generateOffers(type, OffersByType),
     dateFrom: data.startDate,
