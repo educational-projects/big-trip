@@ -17,6 +17,7 @@ export default class Trip {
     this._noTripComponent = new EmptyListView();
 
     this._handlePointChange = this._handlePointChange.bind(this);
+    this._handleModeChange = this._handleModeChange.bind(this);
   }
 
   init(tripTasks) {
@@ -28,6 +29,10 @@ export default class Trip {
   _handlePointChange(updatedPoint) {
     this._tripTasks = updateItem(this._tripTasks, updatedPoint);
     this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  }
+
+  _handleModeChange() {
+    this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
   _renderRoutAndPrie() {
@@ -42,7 +47,7 @@ export default class Trip {
 
   _renderPoint(event) {
     //метод для рендеринга точки маршрута
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._handlePointChange);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._handlePointChange, this._handleModeChange);
     pointPresenter.init(event);
     this._pointPresenter.set(event.id, pointPresenter);
   }
