@@ -9,6 +9,7 @@ export default class Trip {
   constructor(tripContainer, routContainer) {
     this._tripContainer = tripContainer;
     this._routContainer = routContainer;
+    this._pointPresenter = new Map();
 
     this._tripListComponent = new TripEventListView();
     this._sortComponent = new SortingView();
@@ -31,22 +32,23 @@ export default class Trip {
     render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderEvent(event) {
+  _renderPoint(event) {
     //метод для рендеринга точки маршрута
     const pointPresenter = new PointPresenter(this._tripListComponent);
     pointPresenter.init(event);
+    this._pointPresenter.set(event.id, pointPresenter);
   }
 
-  _renderEnents() {
+  _renderPoints() {
     //метод для рендеринга всех точек маршрута
     this._tripTasks
-      .forEach((EventTask) => this._renderEvent(EventTask));
+      .forEach((EventTask) => this._renderPoint(EventTask));
   }
 
   _renderTripEventList() {
-    //метод для рендеринга списка карточек + все карточки
+    //метод для рендеринга обертки точек маршрута + все точки
     render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
-    this._renderEnents();
+    this._renderPoints();
   }
 
   _renderNoTrip() {
