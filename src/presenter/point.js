@@ -3,8 +3,9 @@ import EditEventView from '../view/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/redner';
 
 export default class Point {
-  constructor(pointListContainer) {
+  constructor(pointListContainer, changeData) {
     this._pointListContainer = pointListContainer;
+    this._changeData = changeData;
 
     this._pointComponent = null;
     this._pointEditComponent = null;
@@ -63,7 +64,15 @@ export default class Point {
   }
 
   _handleFavoriteClick() {
-
+    this._changeData(
+      Object.assign(
+        {},
+        this._task,
+        {
+          isFavorite: !this._task.isFavorite,
+        },
+      ),
+    );
   }
 
   _onEscKeyDown(evt) {

@@ -77,6 +77,7 @@ export default class TripEvent extends AbstractView {
     this._task = task;
 
     this._editClickHandler = this._editClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {

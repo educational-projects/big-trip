@@ -3,6 +3,7 @@ import TripEventListView from '../view/trip-event-list';
 import SortingView from '../view/sorting';
 import EmptyListView from '../view/empty-list';
 import { render, RenderPosition } from '../utils/redner';
+import { updateItem } from '../utils/common';
 import PointPresenter from './point';
 
 export default class Trip {
@@ -14,12 +15,19 @@ export default class Trip {
     this._tripListComponent = new TripEventListView();
     this._sortComponent = new SortingView();
     this._noTripComponent = new EmptyListView();
+
+    this._handlePointChange = this._handlePointChange.bind(this);
   }
 
   init(tripTasks) {
     this._tripTasks = tripTasks.slice();
 
     this._renderTrip();
+  }
+
+  _handlePointChange(updatedPoint) {
+    this._tripTasks = updateItem(this._tripTasks, updatedPoint);
+    this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
   }
 
   _renderRoutAndPrie() {
@@ -34,7 +42,7 @@ export default class Trip {
 
   _renderPoint(event) {
     //метод для рендеринга точки маршрута
-    const pointPresenter = new PointPresenter(this._tripListComponent);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._handlePointChange);
     pointPresenter.init(event);
     this._pointPresenter.set(event.id, pointPresenter);
   }
