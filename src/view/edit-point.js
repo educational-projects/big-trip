@@ -23,6 +23,15 @@ const createAdditionalOffer = (offers) => {
   return '';
 };
 
+//генерация фотографий места назначения
+const createDestinationalPhoto = (photos) => (
+  `<div class="event__photos-container">
+  <div class="event__photos-tape">
+    ${photos.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`)}
+  </div>
+</div>`
+);
+
 //генерация опций города
 const createCityList = () => (
   CITIES.map((cityName) => (
@@ -54,6 +63,8 @@ const createEditPointForm = (task) => {
 
   //генерация дополнительных опций
   const additionalOffers = createAdditionalOffer(offer);
+
+  const destinationPhotos = createDestinationalPhoto(destination.pictures);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -112,6 +123,7 @@ const createEditPointForm = (task) => {
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${destination.description}</p>
+      ${destinationPhotos}
     </section>
   </section>
 </form>
