@@ -2,7 +2,7 @@ import RouteAndPriceView from '../view/route-and-price';
 import TripEventListView from '../view/trip-event-list';
 import SortingView from '../view/sorting';
 import EmptyListView from '../view/empty-list';
-import { render, RenderPosition } from '../utils/redner';
+import { remove, render, RenderPosition, replace } from '../utils/redner';
 import { updateItem } from '../utils/common';
 import PointPresenter from './point';
 import { SortType } from '../const';
@@ -15,8 +15,9 @@ export default class Trip {
     this._pointPresenter = new Map();
     this._currentSortType = SortType.DAY;
 
+    this._sortComponent = null;
+
     this._tripListComponent = new TripEventListView();
-    this._sortComponent = new SortingView();
     this._noTripComponent = new EmptyListView();
 
     this._handlePointChange = this._handlePointChange.bind(this);
@@ -42,9 +43,14 @@ export default class Trip {
   }
 
   _handleSortTypeChange(sortType) {
+    if(this._currentSortType === sortType) {
+      return;
+    }
+
     this._sortPoints(sortType);
     this._clearTripEventList();
     this._renderTripEventList();
+
   }
 
   _sortPoints(sortType) {
@@ -55,9 +61,6 @@ export default class Trip {
       case SortType.TIME:
         this._tripTasks.sort(sortPointTime);
         break;
-      // case SortType.DAY:
-      //   this._tripTasks.sort(sortPointDay);
-      //   break;
       default:
         this._tripTasks = this._tripTasks.sort(sortPointDay);
     }
@@ -70,10 +73,23 @@ export default class Trip {
     render(this._routContainer, new RouteAndPriceView(this._tripTasks), RenderPosition.AFTERBEGIN);
   }
 
-  _renderSort() {
+  _renderSort(sortType) {
     //метод для рендеринга сортировки
-    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    const prevSortComponent = this._sortComponent;
+
+    this._sortComponent = new SortingView(sortType);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+
+    if (prevSortComponent === null) {
+      render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    if (this._tripContainer.contains(prevSortComponent.getElement())) {
+      replace(this._sortComponent, prevSortComponent);
+    }
+
+    remove(prevSortComponent);
   }
 
   _renderPoint(event) {
@@ -114,6 +130,7 @@ export default class Trip {
 
     this._renderRoutAndPrie();
     this._renderSort(this._currentSortType);
+    this._sortPoints(this._currentSortType);
     this._renderTripEventList();
   }
 }

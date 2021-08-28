@@ -16,7 +16,7 @@ const createAdditionalOffer = (offers) => {
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
     </label>
-  </div>`)}
+  </div>`).join('')}
     </div>
   </section>`;
   }
