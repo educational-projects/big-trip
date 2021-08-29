@@ -17,7 +17,7 @@ const showDate = (tasks) => {
 
   const isOneMonth = startMonth === endMonth ? 'DD' : 'MMM DD';
 
-  return `${dayjs(startData).format('MMM D')} — ${dayjs(endData).format(isOneMonth)}`;
+  return `${dayjs(startData).format('MMM DD')} — ${dayjs(endData).format(isOneMonth)}`;
 };
 
 const getTotalPrice = (points) => points.reduce((sum, {basePrice}) => sum + basePrice, 0);
@@ -39,8 +39,6 @@ const createRouteAndPriceTemplate = (tasks) => {
   </p>
 </section>`;
 };
-
-// Mar 18&nbsp;&mdash;&nbsp;20
 
 export default class RouteAndPrice extends AbstractView {
   constructor(task) {

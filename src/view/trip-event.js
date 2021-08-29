@@ -6,7 +6,8 @@ const createTripEventTemplate = (task) => {
 
   const dateToInHours = dayjs(dateTo).format('HH:mm');
   const dateFromInHours = dayjs(dateFrom).format('HH:mm');
-  const dateToInMonthAndDay = dayjs(dateTo).format('MMM D');
+  const dateFromInMonthAndDay = dayjs(dateFrom).format('MMM D');
+  const dateFromInDateTime = dayjs(dateFrom).format('YYYY-MM-DD');
   const dateToInDatetime = dayjs(dateTo).format('YYYY-MM-DDTHH:mm');
   const dateFromInDatetime = dayjs(dateFrom).format('YYYY-MM-DDTHH:mm');
 
@@ -38,7 +39,7 @@ const createTripEventTemplate = (task) => {
 
   return  `<li class="trip-events__item">
   <div class="event">
-    <time class="event__date" datetime="2019-03-18">${dateToInMonthAndDay}</time>
+    <time class="event__date" datetime="${dateFromInDateTime}">${dateFromInMonthAndDay}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type} icon">
     </div>

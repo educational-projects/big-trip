@@ -13,7 +13,7 @@ export default class Trip {
     this._tripContainer = tripContainer;
     this._routContainer = routContainer;
     this._pointPresenter = new Map();
-    this._currentSortType = SortType.DAY;
+    this._currentSortType = SortType.DAY.name;
 
     this._sortComponent = null;
 
@@ -55,10 +55,10 @@ export default class Trip {
 
   _sortPoints(sortType) {
     switch(sortType) {
-      case SortType.PRICE:
+      case SortType.PRICE.name:
         this._tripTasks.sort(sortPointPrice);
         break;
-      case SortType.TIME:
+      case SortType.TIME.name:
         this._tripTasks.sort(sortPointTime);
         break;
       default:
@@ -69,12 +69,10 @@ export default class Trip {
   }
 
   _renderRoutAndPrie() {
-    //метод для рендеринга маршрута и стоймости
     render(this._routContainer, new RouteAndPriceView(this._tripTasks), RenderPosition.AFTERBEGIN);
   }
 
   _renderSort(sortType) {
-    //метод для рендеринга сортировки
     const prevSortComponent = this._sortComponent;
 
     this._sortComponent = new SortingView(sortType);
@@ -93,20 +91,17 @@ export default class Trip {
   }
 
   _renderPoint(event) {
-    //метод для рендеринга точки маршрута
     const pointPresenter = new PointPresenter(this._tripListComponent, this._handlePointChange, this._handleModeChange);
     pointPresenter.init(event);
     this._pointPresenter.set(event.id, pointPresenter);
   }
 
   _renderPoints() {
-    //метод для рендеринга всех точек маршрута
     this._tripTasks
       .forEach((EventTask) => this._renderPoint(EventTask));
   }
 
   _renderTripEventList() {
-    //метод для рендеринга обертки точек маршрута + все точки
     render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
     this._renderPoints();
   }
@@ -118,7 +113,6 @@ export default class Trip {
   }
 
   _renderNoTrip() {
-    //метод для рендеринга заглшки
     render(this._tripContainer, this._noTripComponent, RenderPosition.BEFOREEND);
   }
 
