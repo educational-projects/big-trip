@@ -19,5 +19,4 @@ render(siteFiltersElement, new FilterView(), RenderPosition.BEFOREEND);
 
 const tripPresenter = new TripPresenter(siteTripEventElement, siteTripElement);
 tripPresenter.init(tasks);
-console.log(tasks);
 

@@ -51,7 +51,6 @@ export default class Trip {
     this._renderSort(this._currentSortType);
     this._clearTripEventList();
     this._renderTripEventList();
-
   }
 
   _sortPoints(sortType) {
@@ -129,9 +128,9 @@ export default class Trip {
       return;
     }
 
-    this._renderRoutAndPrie();
     this._renderSort(this._currentSortType);
     this._sortPoints(this._currentSortType);
+    this._renderRoutAndPrie();
     this._renderTripEventList();
   }
 }
