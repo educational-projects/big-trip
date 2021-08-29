@@ -48,6 +48,7 @@ export default class Trip {
     }
 
     this._sortPoints(sortType);
+    this._renderSort(this._currentSortType);
     this._clearTripEventList();
     this._renderTripEventList();
 
