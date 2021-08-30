@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { CITIES, TYPE } from '../mock/task-mock';
-import AbstractView from './abstract';
+import SmartView from './smart';
 
 //генерация дополнительных опций
 const createAdditionalOffer = (offers) => {
@@ -49,8 +49,8 @@ const createEventTypeList = () => (
   )).join('')
 );
 
-const createEditPointForm = (task) => {
-  const {type, basePrice, dateFrom, dateTo, destination, offer} = task;
+const createEditPointForm = (data) => {
+  const {type, basePrice, dateFrom, dateTo, destination, offer} = data;
 
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
   const dateFromInDateValue = dayjs(dateFrom).format('DD/MM/YY HH:mm');
@@ -130,17 +130,38 @@ const createEditPointForm = (task) => {
 </li>`;
 };
 
-export default class EditEvent extends AbstractView {
-  constructor(task) {
+export default class EditEvent extends SmartView {
+  constructor(point) {
     super();
-    this._task = task;
+    this._data = EditEvent.parsePointToData(point);
 
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
+    this._typeChangeHandler = this._typeChangeHandler.bind(this);
+    this._cityChangeHandler = this._cityChangeHandler.bind(this);
+
+    this._setInnertHandlers();
   }
 
   getTemplate() {
-    return createEditPointForm(this._task);
+    return createEditPointForm(this._data);
+  }
+
+  _typeChangeHandler(evt) {
+    if(evt.target.tagName === 'INPUT') {
+      evt.preventDefault();
+      console.log(evt.target.value);
+    }
+  }
+
+  _cityChangeHandler() {
+
+  }
+
+  reset(point) {
+    this.updateData(
+      EditEvent.parsePointToData(point),
+    );
   }
 
   _closeClickHandler(evt) {
@@ -155,11 +176,35 @@ export default class EditEvent extends AbstractView {
 
   _submitClickHandler(evt) {
     evt.preventDefault();
-    this._callback.submitClick();
+    this._callback.submitClick(EditEvent.parseDataToPoin(this._data));
   }
 
   setSubmitClickHandler(callback) {
     this._callback.submitClick = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
+  }
+
+  _setInnertHandlers() {
+    this.getElement().querySelector('.event__type-list').addEventListener('click', this._typeChangeHandler);
+  }
+
+  restoreHandlers() {
+    this._setInnertHandlers();
+    this.setSubmitClickHandler(this._callback.submitClick);
+  }
+
+  static parsePointToData(point) {
+    return Object.assign(
+      {},
+      point,
+    );
+  }
+
+  static parseDataToPoin(data) {
+    data = Object.assign(
+      {},
+      data,
+    );
+    return data;
   }
 }
