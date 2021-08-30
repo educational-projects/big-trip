@@ -157,7 +157,9 @@ const generatePictyreDescription = () => {
 };
 
 
-const DESTINATION_PHOTO = 'http://picsum.photos/248/152?r=';
+const DESTINATION_PHOTO = [
+  'http://picsum.photos/248/152?r=',
+];
 
 //Генерация данных
 const generateTask = () => {
