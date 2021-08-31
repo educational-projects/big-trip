@@ -8,7 +8,7 @@ const TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Si
 const CITIES = ['Петрозаводск', 'Сегежа', 'Кондопога', 'Олонец', 'Сортовала'];
 
 //описание городов
-const DESTINATION_DESCRIPTION = [
+export const DESTINATION_DESCRIPTION = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
   'Fusce tristique felis at fermentum pharetra.',
@@ -23,7 +23,7 @@ const DESTINATION_DESCRIPTION = [
 //описание фотографий
 const PICKTYRES_DESCRIPTION = ['картинка1', 'картинка2', 'картинка3'];
 // Дополнительные опции
-const OffersByType = {
+export const OffersByType = {
   Taxi: [
     {
       title: 'Upgrade to a business class',
@@ -137,27 +137,27 @@ const generateType = () => {
   return TYPE[randomIndex];
 };
 
-const generateOffers = (type, offersPoint) => {
+export const generateOffers = (type, offersPoint) => {
   const offers = offersPoint[type];
   return offers;
 };
 
 // Генерация города
-const generateDestinationCity = () => {
+export const generateDestinationCity = () => {
   const randomIndex = getRandomInteger(0, CITIES.length -1);
 
   return CITIES[randomIndex];
 };
 
 // Генерация описания картинки
-const generatePictyreDescription = () => {
+export const generatePictyreDescription = () => {
   const randomIndex = getRandomInteger(0, PICKTYRES_DESCRIPTION.length -1);
 
   return PICKTYRES_DESCRIPTION[randomIndex];
 };
 
 
-const DESTINATION_PHOTO = [
+export const DESTINATION_PHOTO = [
   'http://picsum.photos/248/152?r=',
 ];
 

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import { CITIES, TYPE } from '../mock/task-mock';
+import { CITIES, DESTINATION_DESCRIPTION, DESTINATION_PHOTO, generateOffers, generatePictyreDescription, OffersByType, TYPE } from '../mock/task-mock';
+import { getRandomInteger } from '../utils/common';
 import SmartView from './smart';
 
 //генерация дополнительных опций
@@ -43,14 +44,14 @@ const createCityList = () => (
 const createEventTypeList = () => (
   TYPE.map((typeEvent) => (
     `<div class="event__type-item">
-      <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent.toLowerCase()}">
-      <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-taxi-1">${typeEvent}</label>
+      <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent}">
+      <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
     </div>`
   )).join('')
 );
 
 const createEditPointForm = (data) => {
-  const {type, basePrice, dateFrom, dateTo, destination, offer} = data;
+  const {type, basePrice, dateFrom, dateTo, destination, offer, id} = data;
 
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
   const dateFromInDateValue = dayjs(dateFrom).format('DD/MM/YY HH:mm');
@@ -70,11 +71,11 @@ const createEditPointForm = (data) => {
   <form class="event event--edit" action="#" method="post">
   <header class="event__header">
     <div class="event__type-wrapper">
-      <label class="event__type  event__type-btn" for="event-type-toggle-1">
+      <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
         <span class="visually-hidden">Choose event type</span>
         <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type} icon">
       </label>
-      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
 
       <div class="event__type-list">
         <fieldset class="event__type-group">
@@ -86,29 +87,29 @@ const createEditPointForm = (data) => {
     </div>
 
     <div class="event__field-group  event__field-group--destination">
-      <label class="event__label  event__type-output" for="event-destination-1">
+      <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.city}" list="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.city}" list="destination-list-1">
       <datalist id="destination-list-1">
         ${cityList}
       </datalist>
     </div>
 
     <div class="event__field-group  event__field-group--time">
-      <label class="visually-hidden" for="event-start-time-1">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFromInDateValue}">
+      <label class="visually-hidden" for="event-start-time-${id}">From</label>
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateFromInDateValue}">
       &mdash;
-      <label class="visually-hidden" for="event-end-time-1">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateToInDateValue}">
+      <label class="visually-hidden" for="event-end-time-${id}">To</label>
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateToInDateValue}">
     </div>
 
     <div class="event__field-group  event__field-group--price">
-      <label class="event__label" for="event-price-1">
+      <label class="event__label" for="event-price-${id}">
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -148,14 +149,32 @@ export default class EditEvent extends SmartView {
   }
 
   _typeChangeHandler(evt) {
-    if(evt.target.tagName === 'INPUT') {
-      evt.preventDefault();
-      console.log(evt.target.value);
+    if (evt.target.tagName === 'INPUT') {
+      this.updateData(
+        {
+          type: evt.target.value,
+          offer: generateOffers(evt.target.value, OffersByType),
+        },
+      );
     }
   }
 
-  _cityChangeHandler() {
-
+  _cityChangeHandler(evt) {
+    evt.preventDefault();
+    this.updateData(
+      {
+        destination: {
+          description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
+          city: evt.target.value,
+          pictures: [
+            {
+              src: DESTINATION_PHOTO + Math.random(),
+              description: generatePictyreDescription(),
+            },
+          ],
+        },
+      },
+    );
   }
 
   reset(point) {
@@ -186,6 +205,8 @@ export default class EditEvent extends SmartView {
 
   _setInnertHandlers() {
     this.getElement().querySelector('.event__type-list').addEventListener('click', this._typeChangeHandler);
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+    this.getElement().querySelector('.event__input').addEventListener('change', this._cityChangeHandler);
   }
 
   restoreHandlers() {
