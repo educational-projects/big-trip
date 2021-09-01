@@ -2,10 +2,13 @@ import AbstractView from './abstract';
 import { SortType } from '../const';
 
 const createSortingTemplate = (sortType) => {
-  const test = Object.values(SortType);
+  const sortTypes = Object.values(SortType);
+  const getDisabled = (disabled) => disabled === true ? 'disabled' : '';
+  const getChecked = (type) => sortType === type ? 'checked' : '';
+
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-  ${test.map(({name, disabled}) => `<div class="trip-sort__item  trip-sort__item--${name}">
-  <input id="sort-${name}" class="trip-sort__input  visually-hidden" data-sort-type="${name}" type="radio" name="trip-sort" value="sort-${name}" ${sortType === name ? 'checked' : ''} ${disabled === true ? 'disabled' : ''}>
+  ${sortTypes.map(({name, disabled}) => `<div class="trip-sort__item  trip-sort__item--${name}">
+  <input id="sort-${name}" class="trip-sort__input  visually-hidden" data-sort-type="${name}" type="radio" name="trip-sort" value="sort-${name}" ${getChecked(name)} ${getDisabled(disabled)}>
   <label class="trip-sort__btn" for="sort-${name}">${name}</label>
 </div>`).join('')}
 </form>`;};
