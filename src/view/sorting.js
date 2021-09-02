@@ -3,7 +3,7 @@ import { SortType } from '../const';
 
 const createSortingTemplate = (sortType) => {
   const sortTypes = Object.values(SortType);
-  const getDisabled = (disabled) => disabled === true ? 'disabled' : '';
+  const getDisabled = (disabled) => disabled ? 'disabled' : '';
   const getChecked = (type) => sortType === type ? 'checked' : '';
 
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
