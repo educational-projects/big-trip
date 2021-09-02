@@ -146,8 +146,8 @@ export default class EditEvent extends SmartView {
     this._submitClickHandler = this._submitClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._cityChangeHandler = this._cityChangeHandler.bind(this);
-    this._dueDateFromChangeHandler = this._dueDateFromChangeHandler.bind(this);
-    this._dueDateToChangeHandler = this._dueDateToChangeHandler.bind(this);
+    this._DateFromChangeHandler = this._DateFromChangeHandler.bind(this);
+    this._DateToChangeHandler = this._DateToChangeHandler.bind(this);
 
     this._setInnertHandlers();
     this._setDatepicker();
@@ -186,6 +186,20 @@ export default class EditEvent extends SmartView {
     );
   }
 
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepickerFrom) {
+      this._datepickerFrom.destroy();
+      this._datepickerFrom = null;
+    }
+
+    if(this._datepickerTo) {
+      this._datepickerTo.destroy();
+      this._datepickerTo = null;
+    }
+  }
+
   reset(point) {
     this.updateData(
       EditEvent.parsePointToData(point),
@@ -208,11 +222,6 @@ export default class EditEvent extends SmartView {
   }
 
   _setDatepickerFrom() {
-    if (this._datepickerFrom) {
-      this._datepickerFrom.destroy();
-      this._datepickerFrom = null;
-    }
-
     this._datepickerFrom = flatpickr(
       this.getElement().querySelector('[name = "event-start-time"]'),
       {
@@ -220,17 +229,12 @@ export default class EditEvent extends SmartView {
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._data.dateFrom,
-        onChange: this._dueDateFromChangeHandler,
+        onChange: this._DateFromChangeHandler,
       },
     );
   }
 
   _setDatepickerTo() {
-    if (this._datepickerTo) {
-      this._datepickerTo.destroy();
-      this._datepickerTo = null;
-    }
-
     this._datepickerTo = flatpickr(
       this.getElement().querySelector('[name = "event-end-time"]'),
       {
@@ -239,12 +243,12 @@ export default class EditEvent extends SmartView {
         'time_24hr': true,
         minDate: this._data.dateFrom,
         defaultDate: this._data.dateTo,
-        onChange: this._dueDateToChangeHandler,
+        onChange: this._DateToChangeHandler,
       },
     );
   }
 
-  _dueDateFromChangeHandler([userDate]) {
+  _DateFromChangeHandler([userDate]) {
     this.updateData(
       {
         dateFrom: userDate,
@@ -252,7 +256,7 @@ export default class EditEvent extends SmartView {
     );
   }
 
-  _dueDateToChangeHandler([userDate]) {
+  _DateToChangeHandler([userDate]) {
     this.updateData(
       {
         dateTo: userDate,

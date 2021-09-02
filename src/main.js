@@ -4,7 +4,7 @@ import { generateTask } from './mock/task-mock.js';
 import { render, RenderPosition} from './utils/redner.js';
 import TripPresenter from './presenter/trip.js';
 
-const TASK_COUNT = 10;
+const TASK_COUNT = 1;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
