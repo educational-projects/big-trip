@@ -1,18 +1,22 @@
 import dayjs from 'dayjs';
 import { CITIES, DESTINATION_DESCRIPTION, DESTINATION_PHOTO, generateOffers, generatePictyreDescription, OffersByType, TYPE } from '../mock/task-mock';
 import { getRandomInteger } from '../utils/common';
+import flatpickr from 'flatpickr';
 import SmartView from './smart';
 
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
+
+
 //генерация дополнительных опций
-const createAdditionalOffer = (offers) => {
+const createAdditionalOffer = (offers, id) => {
   if (offers.length) {
     return  `<section class="event__section  event__section--offers">
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
     ${offers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ').pop()}-1" type="checkbox" name="event-offer-${title.split(' ').pop()}" checked>
-    <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-1">
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" checked>
+    <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
@@ -41,11 +45,11 @@ const createCityList = () => (
 );
 
 //генерация тайп-листа
-const createEventTypeList = () => (
+const createEventTypeList = (id) => (
   TYPE.map((typeEvent) => (
     `<div class="event__type-item">
-      <input id="event-type-${typeEvent.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent}">
-      <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-1">${typeEvent}</label>
+      <input id="event-type-${typeEvent.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent}">
+      <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-${id}">${typeEvent}</label>
     </div>`
   )).join('')
 );
@@ -60,10 +64,10 @@ const createEditPointForm = (data) => {
   const cityList = createCityList();
 
   //генерация тайп-листа
-  const eventTypeList = createEventTypeList();
+  const eventTypeList = createEventTypeList(id);
 
   //генерация дополнительных опций
-  const additionalOffers = createAdditionalOffer(offer);
+  const additionalOffers = createAdditionalOffer(offer, id);
 
   const destinationPhotos = createDestinationalPhoto(destination.pictures);
 
@@ -90,8 +94,8 @@ const createEditPointForm = (data) => {
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.city}" list="destination-list-1">
-      <datalist id="destination-list-1">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.city}" list="destination-list-${id}">
+      <datalist id="destination-list-${id}">
         ${cityList}
       </datalist>
     </div>
@@ -135,13 +139,18 @@ export default class EditEvent extends SmartView {
   constructor(point) {
     super();
     this._data = EditEvent.parsePointToData(point);
+    this._datepickerFrom = null;
+    this._datepickerTo = null;
 
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._cityChangeHandler = this._cityChangeHandler.bind(this);
+    this._dueDateFromChangeHandler = this._dueDateFromChangeHandler.bind(this);
+    this._dueDateToChangeHandler = this._dueDateToChangeHandler.bind(this);
 
     this._setInnertHandlers();
+    this._setDatepicker();
   }
 
   getTemplate() {
@@ -193,6 +202,64 @@ export default class EditEvent extends SmartView {
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
   }
 
+  _setDatepicker() {
+    this._setDatepickerFrom();
+    this._setDatepickerTo();
+  }
+
+  _setDatepickerFrom() {
+    if (this._datepickerFrom) {
+      this._datepickerFrom.destroy();
+      this._datepickerFrom = null;
+    }
+
+    this._datepickerFrom = flatpickr(
+      this.getElement().querySelector('[name = "event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._data.dateFrom,
+        onChange: this._dueDateFromChangeHandler,
+      },
+    );
+  }
+
+  _setDatepickerTo() {
+    if (this._datepickerTo) {
+      this._datepickerTo.destroy();
+      this._datepickerTo = null;
+    }
+
+    this._datepickerTo = flatpickr(
+      this.getElement().querySelector('[name = "event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        minDate: this._data.dateFrom,
+        defaultDate: this._data.dateTo,
+        onChange: this._dueDateToChangeHandler,
+      },
+    );
+  }
+
+  _dueDateFromChangeHandler([userDate]) {
+    this.updateData(
+      {
+        dateFrom: userDate,
+      },
+    );
+  }
+
+  _dueDateToChangeHandler([userDate]) {
+    this.updateData(
+      {
+        dateTo: userDate,
+      },
+    );
+  }
+
   _submitClickHandler(evt) {
     evt.preventDefault();
     this._callback.submitClick(EditEvent.parseDataToPoin(this._data));
@@ -211,6 +278,7 @@ export default class EditEvent extends SmartView {
 
   restoreHandlers() {
     this._setInnertHandlers();
+    this._setDatepicker();
     this.setSubmitClickHandler(this._callback.submitClick);
   }
 

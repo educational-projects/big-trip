@@ -122,7 +122,7 @@ export const OffersByType = {
 const generateDate = () => {
   const startDate = dayjs();
   const diffTime = startDate.date() + getRandomInteger(60, 2880);
-  const endDate = dayjs().add(diffTime, 'm').toDate();
+  const endDate = dayjs().add(diffTime, 'm');
 
   return {
     startDate,
@@ -171,8 +171,8 @@ const generateTask = () => {
     id: nanoid(),
     basePrice: getRandomInteger(1, 100),
     offer: generateOffers(type, OffersByType),
-    dateFrom: data.startDate,
-    dateTo: data.endDate,
+    dateFrom: data.startDate.toDate(),
+    dateTo: data.endDate.toDate(),
     destination: {
       description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
       city: generateDestinationCity(),
