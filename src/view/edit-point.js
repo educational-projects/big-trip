@@ -209,7 +209,7 @@ export default class EditEvent extends SmartView {
 
   _formDeleteClickHandler(evt) {
     evt.preventDefault();
-    this._callback.deleteClick(EditEvent.parseDataToPoin(this.data));
+    this._callback.deleteClick(EditEvent.parseDataToPoin(this._data));
   }
 
   setDeleteClickHandler(callback) {
