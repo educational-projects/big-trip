@@ -144,6 +144,7 @@ export default class EditEvent extends SmartView {
 
     this._closeClickHandler = this._closeClickHandler.bind(this);
     this._submitClickHandler = this._submitClickHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._typeChangeHandler = this._typeChangeHandler.bind(this);
     this._cityChangeHandler = this._cityChangeHandler.bind(this);
     this._DateFromChangeHandler = this._DateFromChangeHandler.bind(this);
@@ -204,6 +205,16 @@ export default class EditEvent extends SmartView {
     this.updateData(
       EditEvent.parsePointToData(point),
     );
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(EditEvent.parseDataToPoin(this.data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   _closeClickHandler(evt) {
@@ -284,6 +295,7 @@ export default class EditEvent extends SmartView {
     this._setInnertHandlers();
     this._setDatepicker();
     this.setSubmitClickHandler(this._callback.submitClick);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   static parsePointToData(point) {
