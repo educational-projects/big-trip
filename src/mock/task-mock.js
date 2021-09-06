@@ -120,9 +120,8 @@ export const OffersByType = {
 
 //случайная генерация даты окончания точки путешествия
 const generateDate = () => {
-  const startDate = dayjs();
-  const diffTime = startDate.date() + getRandomInteger(60, 2880);
-  const endDate = dayjs().add(diffTime, 'm');
+  const startDate = dayjs().add(getRandomInteger(-2880, 2880), 'm');
+  const endDate = startDate.add(getRandomInteger(0, 2880), 'm');
 
   return {
     startDate,
