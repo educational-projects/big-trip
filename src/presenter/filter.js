@@ -1,6 +1,7 @@
 import { FilterType, UpdateType } from '../const';
 import { remove, render, RenderPosition, replace } from '../utils/redner';
 import FilterView from '../view/filters';
+import { filter } from '../utils/filter';
 
 export default class Filter {
   constructor(filterContainer, filterModel, pointsModel) {
@@ -46,15 +47,20 @@ export default class Filter {
   }
 
   _getFilters() {
+    const points = this._pointsModel.getPoints();
+
     return [
       {
         type: FilterType.EVERYTHING,
+        count: filter[FilterType.EVERYTHING](points).length,
       },
       {
         type: FilterType.FUTURE,
+        count: filter[FilterType.FUTURE](points).length,
       },
       {
         type: FilterType.PAST,
+        count: filter[FilterType.PAST](points).length,
       },
     ];
   }
