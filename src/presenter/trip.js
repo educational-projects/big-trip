@@ -20,9 +20,10 @@ export default class Trip {
 
     this._sortComponent = null;
     this._routAndPriceComponent = null;
+    this._noTripComponent = null;
 
     this._tripListComponent = new TripEventListView();
-    this._noTripComponent = new EmptyListView();
+    // this._noTripComponent = new EmptyListView();
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -104,8 +105,9 @@ export default class Trip {
     if(this._routAndPriceComponent !== null) {
       this._routAndPriceComponent = null;
     }
+    const sortedPoints = this._pointsModel.getPoints().slice().sort(sortPointDay);
 
-    this._routAndPriceComponent = new RouteAndPriceView(this._pointsModel.getPoints());
+    this._routAndPriceComponent = new RouteAndPriceView(sortedPoints);
 
     render(this._routContainer, this._routAndPriceComponent, RenderPosition.AFTERBEGIN);
   }
@@ -142,6 +144,7 @@ export default class Trip {
   }
 
   _renderNoTrip() {
+    this._noTripComponent = new EmptyListView(this._filterType);
     render(this._tripContainer, this._noTripComponent, RenderPosition.BEFOREEND);
   }
 
@@ -166,8 +169,8 @@ export default class Trip {
     }
 
     this._renderSort();
-    this._renderRoutAndPrice();
     this._renderTripEventList();
+    this._renderRoutAndPrice();
   }
 
 }

@@ -1,18 +1,25 @@
 import AbstractView from './abstract';
+import { FilterType } from '../const';
 
-const createEmptyList = () => (
-  `<p class="trip-events__msg">Click New Event to create your first point</p>
+const NoPointsTextType = {
+  [FilterType.EVERYTHING]: 'Click New Event to create your first point',
+  [FilterType.PAST]: 'There are no past events now',
+  [FilterType.FUTURE]: 'There are no future events now',
+};
 
-  <!--
-    Значение отображаемого текста зависит от выбранного фильтра:
-      * Everthing – 'Click New Event to create your first point'
-      * Past — 'There are no past events now';
-      * Future — 'There are no future events now'.
-  -->`
-);
+const createEmptyList = (filterType) => {
+  const noPointTextValue = NoPointsTextType[filterType];
+  return (
+    `<p class="trip-events__msg">${noPointTextValue}</p>`);
+};
 
 export default class EmptyList extends AbstractView {
+  constructor(data) {
+    super();
+    this._data = data;
+  }
+
   getTemplate() {
-    return createEmptyList();
+    return createEmptyList(this._data);
   }
 }
