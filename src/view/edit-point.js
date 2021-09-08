@@ -190,10 +190,12 @@ export default class EditEvent extends SmartView {
 
   _priceChangeHandler(evt) {
     evt.preventDefault();
+    evt.setAttribute('type', 'number');
     this.updateData(
       {
         basePrice: + evt.target.value,
       },
+      true,
     );
   }
 
@@ -298,8 +300,8 @@ export default class EditEvent extends SmartView {
   _setInnertHandlers() {
     this.getElement().querySelector('.event__type-list').addEventListener('click', this._typeChangeHandler);
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
-    this.getElement().querySelector('.event__input').addEventListener('change', this._cityChangeHandler);
-    this.getElement().querySelector('.event__input--price').addEventListener('change', this._priceChangeHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
+    this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceChangeHandler);
   }
 
   restoreHandlers() {

@@ -42,7 +42,7 @@ export default class Point {
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
-      render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
+      render(this._pointListContainer, this._pointComponent, RenderPosition.AFTERBEGIN);
       return;
     }
 
@@ -71,7 +71,11 @@ export default class Point {
 
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
+
+    const priceInput = document.querySelector('.event__input--price');
+    priceInput.setAttribute('type', 'number');
     document.addEventListener('keydown', this._onEscKeyDown);
+
     this._changeMode();
     this._mode = Mode.EDITING;
 

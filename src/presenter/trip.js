@@ -23,7 +23,6 @@ export default class Trip {
     this._noTripComponent = null;
 
     this._tripListComponent = new TripEventListView();
-    // this._noTripComponent = new EmptyListView();
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);

@@ -6,11 +6,11 @@ import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filters.js';
 
-const TASK_COUNT = 5;
-const tasks = new Array(TASK_COUNT).fill().map(generateTask);
+const POINT_COUNT = 5;
+const points = new Array(POINT_COUNT).fill().map(generateTask);
 
 const pointsModel = new PointsModel();
-pointsModel.setPoints(tasks);
+pointsModel.setPoints(points);
 
 const filterModel = new FilterModel ();
 
@@ -20,6 +20,7 @@ const siteNavigationElement = siteHeaderElement.querySelector('.trip-controls__n
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
+const newPointButton = document.querySelector('.trip-main__event-add-btn');
 
 render(siteNavigationElement, new SiteMenuView(), RenderPosition.BEFOREEND);
 
