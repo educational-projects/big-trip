@@ -7,7 +7,8 @@ const TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Si
 //список городов путешествия
 const CITIES = ['Петрозаводск', 'Сегежа', 'Кондопога', 'Олонец', 'Сортовала'];
 
-//описание городов
+// описание городов
+
 export const DESTINATION_DESCRIPTION = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',

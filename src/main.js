@@ -22,9 +22,21 @@ const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 const newPointButton = document.querySelector('.trip-main__event-add-btn');
 
+const handlePointNewFormClose = () => {
+  newPointButton.disabled = true;
+};
+
 render(siteNavigationElement, new SiteMenuView(), RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(siteFiltersElement, filterModel, pointsModel);
 const tripPresenter = new TripPresenter(siteTripEventElement, siteTripElement, pointsModel, filterModel);
 filterPresenter.init();
 tripPresenter.init();
+
+
+newPointButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  newPointButton.disabled = true;
+  tripPresenter.createPoint(handlePointNewFormClose);
+});
+

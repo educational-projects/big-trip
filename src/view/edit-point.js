@@ -3,9 +3,25 @@ import { CITIES, DESTINATION_DESCRIPTION, DESTINATION_PHOTO, generateOffers, gen
 import { getRandomInteger } from '../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from './smart';
+import { nanoid } from 'nanoid';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
+const BLANK_POINT = {
+  type: 'Taxi',
+  basePrice: '',
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  id: nanoid(),
+  offer: [],
+  destination: {
+    description: '',
+    city: '',
+    pictures: [],
+  },
+  isFavorite: false,
+
+};
 
 //генерация дополнительных опций
 const createAdditionalOffer = (offers, id) => {
@@ -28,14 +44,38 @@ const createAdditionalOffer = (offers, id) => {
   return '';
 };
 
+
+const createDestinationTemplate = (destination) => {
+  const {description, pictures} = destination;
+
+  const createDestinationPhoto = () => {
+    if (pictures !== 0) {
+      return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+      ${pictures.map(({src, descriptionPhoto}) => `<img class="event__photo" src="${src}" alt="${descriptionPhoto}">`).join('')}
+    </div>
+  </div>`;}
+  };
+
+  if (destination.city !== '') {
+    return `<section class="event__section  event__section--destination">
+    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+    <p class="event__destination-description">${description}</p>
+    ${createDestinationPhoto()}
+  </section>`;
+  }
+  return '';
+};
+
 //генерация фотографий места назначения
-const createDestinationalPhoto = (photos) => (
-  `<div class="event__photos-container">
-  <div class="event__photos-tape">
-    ${photos.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`)}
-  </div>
-</div>`
-);
+// const createDestinationalPhoto = (photos) => (
+//   `<div class="event__photos-container">
+//   <div class="event__photos-tape">
+//     ${photos.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
+//   </div>
+// </div>`
+// );
+
 
 //генерация опций города
 const createCityList = () => (
@@ -69,7 +109,8 @@ const createEditPointForm = (data) => {
   //генерация дополнительных опций
   const additionalOffers = createAdditionalOffer(offer, id);
 
-  const destinationPhotos = createDestinationalPhoto(destination.pictures);
+  // const destinationPhotos = createDestinationalPhoto(destination.pictures);
+  const destinationList = createDestinationTemplate(destination);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -125,18 +166,14 @@ const createEditPointForm = (data) => {
   <section class="event__details">
     ${additionalOffers}
 
-    <section class="event__section  event__section--destination">
-      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destination.description}</p>
-      ${destinationPhotos}
-    </section>
+    ${destinationList}
   </section>
 </form>
 </li>`;
 };
 
 export default class EditEvent extends SmartView {
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = EditEvent.parsePointToData(point);
     this._datepickerFrom = null;
@@ -172,20 +209,27 @@ export default class EditEvent extends SmartView {
 
   _cityChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData(
-      {
-        destination: {
-          description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
-          city: evt.target.value,
-          pictures: [
-            {
-              src: DESTINATION_PHOTO + Math.random(),
-              description: generatePictyreDescription(),
-            },
-          ],
+    const test = CITIES.includes(evt.target.value);
+    if (evt.target.value.length <= 0 || test === false) {
+      evt.target.setCustomValidity('please select a city from the list');
+    } else {
+      evt.target.setCustomValidity('');
+      this.updateData(
+        {
+          destination: {
+            description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
+            city: evt.target.value,
+            pictures: [
+              {
+                src: DESTINATION_PHOTO + Math.random(),
+                description: generatePictyreDescription(),
+              },
+            ],
+          },
         },
-      },
-    );
+      );
+    }
+    evt.target.reportValidity();
   }
 
   _priceChangeHandler(evt) {

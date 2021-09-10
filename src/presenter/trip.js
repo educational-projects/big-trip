@@ -4,6 +4,7 @@ import SortingView from '../view/sorting';
 import EmptyListView from '../view/empty-list';
 import { remove, render, RenderPosition } from '../utils/redner';
 import PointPresenter from './point';
+import pointNewPresenter from './new-point';
 import { SortType, UserAction, UpdateType, FilterType } from '../const';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point';
 import { filter } from '../utils/filter';
@@ -29,12 +30,31 @@ export default class Trip {
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
 
-    this._pointsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._pointNewPresenter = new pointNewPresenter(this._tripListComponent, this._handleViewAction);
   }
 
   init() {
+    this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
+
     this._renderTrip();
+  }
+
+  destroy() {
+    this._clearTrip({resetSortType: true});
+
+    remove(this._tripListComponent);
+    remove(this._routAndPriceComponent);
+
+    this._pointsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
+  }
+
+  createPoint(callback) {
+    this._currentSortType = SortType.DAY.name;
+    this._filterType= FilterType.EVERYTHING;
+
+    this._pointNewPresenter.init(callback);
   }
 
   _getPoints() {
@@ -86,6 +106,7 @@ export default class Trip {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) => presenter.resetView());
   }
 
@@ -148,6 +169,7 @@ export default class Trip {
   }
 
   _clearTrip({resetSortType = false} = {}) {
+    this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) =>presenter.destroy());
     this._pointPresenter.clear();
 

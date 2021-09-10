@@ -9,21 +9,25 @@ export default class PointNew {
     this._changeData = changeData;
 
     this._pointEditComponent = null;
+    this._destroyCallback = null;
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init() {
+  init(callback) {
+
     if (this._pointEditComponent !== null) {
       return;
     }
+
+    this._destroyCallback = callback;
 
     this._pointEditComponent = new EditEventView();
     this._pointEditComponent.setSubmitClickHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
-    render(this._pointListContainer, this._pointEditComponent, RenderPosition.BEFOREEND);
+    render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this._escKeyDownHandler);
   }
@@ -31,6 +35,10 @@ export default class PointNew {
   destroy() {
     if (this._pointEditComponent === null) {
       return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
     }
 
     remove(this._pointEditComponent);
