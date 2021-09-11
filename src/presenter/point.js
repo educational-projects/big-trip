@@ -129,7 +129,7 @@ export default class Point {
   _handleFormSubmit(point) {
     this._changeData(
       UserAction.UPDATE_POINT,
-      UpdateType.MAJOR,
+      UpdateType.MINOR,
       point,
     );
     this._replaceFormToPoint();

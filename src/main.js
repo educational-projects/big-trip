@@ -23,7 +23,7 @@ const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 const newPointButton = document.querySelector('.trip-main__event-add-btn');
 
 const handlePointNewFormClose = () => {
-  newPointButton.disabled = true;
+  newPointButton.disabled = false;
 };
 
 render(siteNavigationElement, new SiteMenuView(), RenderPosition.BEFOREEND);

@@ -117,8 +117,8 @@ export default class Trip {
 
     this._currentSortType = sortType;
     this._renderSort();
-    this._clearTripEventList();
-    this._renderTripEventList();
+    this._clearTrip();
+    this._renderTrip();
   }
 
   _renderRoutAndPrice() {
@@ -157,11 +157,11 @@ export default class Trip {
     this._renderPoints(points);
   }
 
-  _clearTripEventList() {
-    this._pointPresenter
-      .forEach((presenter) => presenter.destroy());
-    this._pointPresenter.clear();
-  }
+  // _clearTripEventList() {
+  //   this._pointPresenter
+  //     .forEach((presenter) => presenter.destroy());
+  //   this._pointPresenter.clear();
+  // }
 
   _renderNoTrip() {
     this._noTripComponent = new EmptyListView(this._filterType);
