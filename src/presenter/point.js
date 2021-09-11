@@ -26,14 +26,14 @@ export default class Point {
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init(point) {
+  init(point, offers) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new TripEventView(point);
-    this._pointEditComponent = new EditEventView(point);
+    this._pointEditComponent = new EditEventView(point, offers);
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -72,8 +72,8 @@ export default class Point {
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
 
-    const priceInput = document.querySelector('.event__input--price');
-    priceInput.setAttribute('type', 'number');
+    // const priceInput = document.querySelector('.event__input--price');
+    // priceInput.setAttribute('type', 'number');
     document.addEventListener('keydown', this._onEscKeyDown);
 
     this._changeMode();

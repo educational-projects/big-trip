@@ -6,3 +6,9 @@ export const getRandomInteger = (a = 0, b = 1) => {
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
+
+// function capitalizeFirstLetter(string) {
+//   return string.charAt(0).toUpperCase() + string.slice(1);
+// }
+
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);

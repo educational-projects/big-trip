@@ -12,7 +12,7 @@ const points = new Array(POINT_COUNT).fill().map(generateTask);
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
-const filterModel = new FilterModel ();
+const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripElement = siteHeaderElement.querySelector('.trip-main');

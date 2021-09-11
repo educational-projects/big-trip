@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { CITIES, DESTINATION_DESCRIPTION, DESTINATION_PHOTO, generateOffers, generatePictyreDescription, OffersByType, TYPE } from '../mock/task-mock';
-import { getRandomInteger } from '../utils/common';
+import { getRandomInteger, capitalizeFirstLetter } from '../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from './smart';
 import { nanoid } from 'nanoid';
@@ -13,7 +13,20 @@ const BLANK_POINT = {
   dateFrom: new Date(),
   dateTo: new Date(),
   id: nanoid(),
-  offer: [],
+  offer: [
+    {
+      title: 'Upgrade to a business class',
+      price: 120,
+    },
+    {
+      title: 'Choose the radio station',
+      price: 60,
+    },
+    {
+      title: 'Подождать 5 минут',
+      price: 60,
+    },
+  ],
   destination: {
     description: '',
     city: '',
@@ -43,6 +56,25 @@ const createAdditionalOffer = (offers, id) => {
   }
   return '';
 };
+// const createAdditionalOffer = (offers, id) => {
+//   if (offers.length) {
+//     return  `<section class="event__section  event__section--offers">
+//     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+//     <div class="event__available-offers">
+//     ${offers.map(({title, price}) => `<div class="event__offer-selector">
+//     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" checked>
+//     <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
+//       <span class="event__offer-title">${title}</span>
+//       &plus;&euro;&nbsp;
+//       <span class="event__offer-price">${price}</span>
+//     </label>
+//   </div>`).join('')}
+//     </div>
+//   </section>`;
+//   }
+//   return '';
+// };
 
 
 const createDestinationTemplate = (destination) => {
@@ -57,7 +89,7 @@ const createDestinationTemplate = (destination) => {
   </div>`;}
   };
 
-  if (destination.city !== '') {
+  if (destination.city) {
     return `<section class="event__section  event__section--destination">
     <h3 class="event__section-title  event__section-title--destination">Destination</h3>
     <p class="event__destination-description">${description}</p>
@@ -173,9 +205,11 @@ const createEditPointForm = (data) => {
 };
 
 export default class EditEvent extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, offers) {
     super();
     this._data = EditEvent.parsePointToData(point);
+    this._offers = offers;
+
     this._datepickerFrom = null;
     this._datepickerTo = null;
 
@@ -208,9 +242,10 @@ export default class EditEvent extends SmartView {
   }
 
   _cityChangeHandler(evt) {
+    const inputValue = evt.target.value;
+    const isCityExist = CITIES.includes(capitalizeFirstLetter(inputValue));
     evt.preventDefault();
-    const test = CITIES.includes(evt.target.value);
-    if (evt.target.value.length <= 0 || test === false) {
+    if (inputValue.length <= 0 || isCityExist === false) {
       evt.target.setCustomValidity('please select a city from the list');
     } else {
       evt.target.setCustomValidity('');
@@ -218,7 +253,7 @@ export default class EditEvent extends SmartView {
         {
           destination: {
             description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
-            city: evt.target.value,
+            city: capitalizeFirstLetter(inputValue),
             pictures: [
               {
                 src: DESTINATION_PHOTO + Math.random(),
@@ -233,13 +268,21 @@ export default class EditEvent extends SmartView {
   }
 
   _priceChangeHandler(evt) {
+    const priceInput = evt.target.value;
+    const isNotNumber = isNaN(priceInput);
     evt.preventDefault();
-    this.updateData(
-      {
-        basePrice: + evt.target.value,
-      },
-      true,
-    );
+    if (priceInput <= 0 || isNotNumber) {
+      evt.target.setCustomValidity('please use only positive numbers');
+    } else {
+      evt.target.setCustomValidity('');
+      this.updateData(
+        {
+          basePrice: + evt.target.value,
+        },
+        true,
+      );
+    }
+    evt.target.reportValidity();
   }
 
   removeElement() {

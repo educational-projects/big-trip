@@ -13,6 +13,7 @@ export default class PointNew {
 
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init(callback) {
@@ -54,16 +55,19 @@ export default class PointNew {
       Object.assign({id: nanoid()}, point),
     );
     this.destroy();
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
   }
 
   _handleDeleteClick() {
     this.destroy();
+    document.querySelector('.trip-main__event-add-btn').disabled = false;
   }
 
   _escKeyDownHandler(evt) {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
+      document.querySelector('.trip-main__event-add-btn').disabled = false;
     }
   }
 }
