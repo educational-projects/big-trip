@@ -121,7 +121,7 @@ export default class Trip {
     this._renderTrip();
   }
 
-  _renderRoutAndPrice() {
+  renderRoutAndPrice() {
     if(this._routAndPriceComponent !== null) {
       this._routAndPriceComponent = null;
     }
@@ -191,7 +191,7 @@ export default class Trip {
 
     this._renderSort();
     this._renderTripEventList();
-    this._renderRoutAndPrice();
+    this.renderRoutAndPrice();
   }
 
 }

@@ -11,4 +11,4 @@ export const getRandomInteger = (a = 0, b = 1) => {
 //   return string.charAt(0).toUpperCase() + string.slice(1);
 // }
 
-export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);

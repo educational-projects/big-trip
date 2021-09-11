@@ -36,6 +36,12 @@ const BLANK_POINT = {
 
 };
 
+const createEventRollupButtonTemplate = (isNewEvent) => (
+  `${!isNewEvent ? `<button class="event__rollup-btn" type="button">
+    <span class="visually-hidden">Open event</span>
+  </button>`: ''}`
+);
+
 //генерация дополнительных опций
 const createAdditionalOffer = (offers, id) => {
   if (offers.length) {
@@ -56,26 +62,6 @@ const createAdditionalOffer = (offers, id) => {
   }
   return '';
 };
-// const createAdditionalOffer = (offers, id) => {
-//   if (offers.length) {
-//     return  `<section class="event__section  event__section--offers">
-//     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-//     <div class="event__available-offers">
-//     ${offers.map(({title, price}) => `<div class="event__offer-selector">
-//     <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" checked>
-//     <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
-//       <span class="event__offer-title">${title}</span>
-//       &plus;&euro;&nbsp;
-//       <span class="event__offer-price">${price}</span>
-//     </label>
-//   </div>`).join('')}
-//     </div>
-//   </section>`;
-//   }
-//   return '';
-// };
-
 
 const createDestinationTemplate = (destination) => {
   const {description, pictures} = destination;
@@ -99,16 +85,6 @@ const createDestinationTemplate = (destination) => {
   return '';
 };
 
-//генерация фотографий места назначения
-// const createDestinationalPhoto = (photos) => (
-//   `<div class="event__photos-container">
-//   <div class="event__photos-tape">
-//     ${photos.map(({src, description}) => `<img class="event__photo" src="${src}" alt="${description}">`).join('')}
-//   </div>
-// </div>`
-// );
-
-
 //генерация опций города
 const createCityList = () => (
   CITIES.map((cityName) => (
@@ -126,7 +102,7 @@ const createEventTypeList = (id) => (
   )).join('')
 );
 
-const createEditPointForm = (data) => {
+const createEditPointForm = (data, isNewEvent) => {
   const {type, basePrice, dateFrom, dateTo, destination, offer, id} = data;
 
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
@@ -141,8 +117,9 @@ const createEditPointForm = (data) => {
   //генерация дополнительных опций
   const additionalOffers = createAdditionalOffer(offer, id);
 
-  // const destinationPhotos = createDestinationalPhoto(destination.pictures);
   const destinationList = createDestinationTemplate(destination);
+
+  const eventRollupButton = createEventRollupButtonTemplate(isNewEvent);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -191,9 +168,7 @@ const createEditPointForm = (data) => {
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
     <button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button">
-      <span class="visually-hidden">Open event</span>
-    </button>
+    ${eventRollupButton}
   </header>
   <section class="event__details">
     ${additionalOffers}
@@ -227,7 +202,7 @@ export default class EditEvent extends SmartView {
   }
 
   getTemplate() {
-    return createEditPointForm(this._data);
+    return createEditPointForm(this._data, false);
   }
 
   _typeChangeHandler(evt) {
@@ -322,7 +297,9 @@ export default class EditEvent extends SmartView {
 
   setCloseClickHandler(callback) {
     this._callback.closeClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+    if (this.getElement().querySelector('.event__rollup-btn')) {
+      this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+    }
   }
 
   _setDatepicker() {
@@ -385,9 +362,11 @@ export default class EditEvent extends SmartView {
 
   _setInnertHandlers() {
     this.getElement().querySelector('.event__type-list').addEventListener('click', this._typeChangeHandler);
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceChangeHandler);
+    if (this.getElement().querySelector('.event__rollup-btn')) {
+      this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+    }
   }
 
   restoreHandlers() {

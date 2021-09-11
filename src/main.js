@@ -5,14 +5,10 @@ import { render, RenderPosition} from './utils/redner.js';
 import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filters.js';
+import { MenuItem } from './const.js';
 
 const POINT_COUNT = 5;
 const points = new Array(POINT_COUNT).fill().map(generateTask);
-
-const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
-
-const filterModel = new FilterModel();
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripElement = siteHeaderElement.querySelector('.trip-main');
@@ -22,14 +18,40 @@ const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 const newPointButton = document.querySelector('.trip-main__event-add-btn');
 
+const pointsModel = new PointsModel();
+pointsModel.setPoints(points);
+
+const filterModel = new FilterModel();
+
 const handlePointNewFormClose = () => {
   newPointButton.disabled = false;
 };
 
-render(siteNavigationElement, new SiteMenuView(), RenderPosition.BEFOREEND);
+const siteMenuComponent = new SiteMenuView();
+render(siteNavigationElement, siteMenuComponent, RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(siteFiltersElement, filterModel, pointsModel);
 const tripPresenter = new TripPresenter(siteTripEventElement, siteTripElement, pointsModel, filterModel);
+
+const handleSiteMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.TABLE:
+      tripPresenter.destroy();
+      tripPresenter.init();
+      siteMenuComponent.setMenuItem(MenuItem.TABLE);
+      //скрыть статистику
+      break;
+    case MenuItem.STATS:
+      tripPresenter.destroy();
+      tripPresenter.renderRoutAndPrice();
+      siteMenuComponent.setMenuItem(MenuItem.STATS);
+      //показать статискику
+      break;
+  }
+};
+
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+
 filterPresenter.init();
 tripPresenter.init();
 
