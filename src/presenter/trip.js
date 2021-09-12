@@ -56,6 +56,8 @@ export default class Trip {
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
 
+    remove(this._noTripComponent);
+    render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
     this._pointNewPresenter.init(this._offers, callback);
   }
 

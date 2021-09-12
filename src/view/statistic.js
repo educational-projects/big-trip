@@ -16,7 +16,7 @@ const createStatisticsTemplate = () => `<section class="statistics">
     </div>
   </section>`;
 
-export default class Statistics extends SmartView() {
+export default class Statistics extends SmartView {
   constructor(points) {
     super();
     this._points = points;

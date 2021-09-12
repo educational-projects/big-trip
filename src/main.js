@@ -1,6 +1,6 @@
 import SiteMenuView from './view/trip-menu.js';
 import PointsModel from './model/points.js';
-import {generateTask} from './mock/task-mock.js';
+import {generateTask, OffersByType} from './mock/task-mock.js';
 import { render, RenderPosition} from './utils/redner.js';
 import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
@@ -26,7 +26,7 @@ pointsModel.setPoints(points);
 
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
-// offersModel.setOffers()
+offersModel.setOffers(OffersByType);
 
 const handlePointNewFormClose = () => {
   newPointButton.disabled = false;
