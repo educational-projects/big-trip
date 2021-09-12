@@ -7,26 +7,26 @@ import { nanoid } from 'nanoid';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
+const onCityChange = () => {
+  const city = document.querySelector('.event__input--destination');
+  console.log(typeof city.value);
+
+  if (city.value === '') {
+    city.setCustomValidity('НИЗЯ');
+  } else {
+    city.setCustomValidity('');
+  }
+
+  city.reportValidity();
+};
+
 const BLANK_POINT = {
   type: 'Taxi',
   basePrice: '',
   dateFrom: new Date(),
   dateTo: new Date(),
   id: nanoid(),
-  offer: [
-    {
-      title: 'Upgrade to a business class',
-      price: 120,
-    },
-    {
-      title: 'Choose the radio station',
-      price: 60,
-    },
-    {
-      title: 'Подождать 5 минут',
-      price: 60,
-    },
-  ],
+  offer: [],
   destination: {
     description: '',
     city: '',
@@ -58,7 +58,7 @@ const createAdditionalOffer = (checkedOffers, availableOffers, id) => {
 
     <div class="event__available-offers">
     ${availableOffers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" data-offer="${title.toLowerCase()}" data-price="${price}" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" ${getOffersChecked(title)}>
+    <input class="event__offer-checkbox  visually-hidden" data-title="${title.toLowerCase()}" data-price="${price}" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" ${getOffersChecked(title)}>
     <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
@@ -284,7 +284,7 @@ export default class EditEvent extends SmartView {
     checkInputs.forEach((offer) => {
       if(offer.checked) {
         currentOffers.push({
-          title: offer.dataset.offer,
+          title: offer.dataset.title,
           price: offer.dataset.price,
         });
       }
@@ -387,6 +387,7 @@ export default class EditEvent extends SmartView {
 
   _submitClickHandler(evt) {
     evt.preventDefault();
+    onCityChange();
     this._callback.submitClick(EditEvent.parseDataToPoin(this._data));
   }
 
