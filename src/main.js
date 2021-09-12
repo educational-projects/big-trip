@@ -7,12 +7,14 @@ import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filters.js';
 import { MenuItem } from './const.js';
 import OffersModel from './model/offers.js';
+import StatisticsView from './view/statistic.js';
 
 const POINT_COUNT = 5;
 const points = new Array(POINT_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripElement = siteHeaderElement.querySelector('.trip-main');
+const siteMainContainer = siteHeaderElement.querySelector('.page-body__container');
 const siteNavigationElement = siteHeaderElement.querySelector('.trip-controls__navigation');
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-main');
@@ -24,6 +26,7 @@ pointsModel.setPoints(points);
 
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
+// offersModel.setOffers()
 
 const handlePointNewFormClose = () => {
   newPointButton.disabled = false;
@@ -56,6 +59,7 @@ siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 tripPresenter.init();
+// render(siteMainContainer, new StatisticsView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
 
 
 newPointButton.addEventListener('click', (evt) => {
