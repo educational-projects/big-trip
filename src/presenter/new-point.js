@@ -24,7 +24,7 @@ export default class PointNew {
 
     this._destroyCallback = callback;
 
-    this._pointEditComponent = new EditEventView();
+    this._pointEditComponent = new EditEventView({});
     this._pointEditComponent.setSubmitClickHandler(this._handleFormSubmit);
     this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 

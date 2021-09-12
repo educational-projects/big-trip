@@ -143,7 +143,7 @@ export default class Trip {
 
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleModeChange);
-    pointPresenter.init(point, this._offers);
+    pointPresenter.init(point);
     this._pointPresenter.set(point.id, pointPresenter);
   }
 
@@ -156,12 +156,6 @@ export default class Trip {
     const points = this._getPoints();
     this._renderPoints(points);
   }
-
-  // _clearTripEventList() {
-  //   this._pointPresenter
-  //     .forEach((presenter) => presenter.destroy());
-  //   this._pointPresenter.clear();
-  // }
 
   _renderNoTrip() {
     this._noTripComponent = new EmptyListView(this._filterType);

@@ -42,6 +42,10 @@ const createEventRollupButtonTemplate = (isNewEvent) => (
   </button>`: ''}`
 );
 
+const createContentButton = (isNewEvent) => (
+  `${isNewEvent ? 'Cancel' : 'Delete'}`
+);
+
 //генерация дополнительных опций
 const createAdditionalOffer = (offers, id) => {
   if (offers.length) {
@@ -50,7 +54,7 @@ const createAdditionalOffer = (offers, id) => {
 
     <div class="event__available-offers">
     ${offers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" checked>
+    <input class="event__offer-checkbox  visually-hidden" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}">
     <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
@@ -121,6 +125,8 @@ const createEditPointForm = (data, isNewEvent) => {
 
   const eventRollupButton = createEventRollupButtonTemplate(isNewEvent);
 
+  const buttonText = createContentButton(isNewEvent);
+
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
   <header class="event__header">
@@ -167,7 +173,7 @@ const createEditPointForm = (data, isNewEvent) => {
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__reset-btn" type="reset">${buttonText}</button>
     ${eventRollupButton}
   </header>
   <section class="event__details">
@@ -180,10 +186,11 @@ const createEditPointForm = (data, isNewEvent) => {
 };
 
 export default class EditEvent extends SmartView {
-  constructor(point = BLANK_POINT, offers) {
+  constructor(data) {
     super();
+    const {point = BLANK_POINT} = data;
     this._data = EditEvent.parsePointToData(point);
-    this._offers = offers;
+    this._newPoint = !data.point;
 
     this._datepickerFrom = null;
     this._datepickerTo = null;
@@ -202,7 +209,9 @@ export default class EditEvent extends SmartView {
   }
 
   getTemplate() {
-    return createEditPointForm(this._data, false);
+    const isNewEvent = (this._newPoint);
+
+    return createEditPointForm(this._data, isNewEvent);
   }
 
   _typeChangeHandler(evt) {
@@ -391,3 +400,217 @@ export default class EditEvent extends SmartView {
     return data;
   }
 }
+// export default class EditEvent extends SmartView {
+//   constructor(point = BLANK_POINT) {
+//     super();
+//     this._data = EditEvent.parsePointToData(point);
+//     this._newPoint = point;
+
+//     this._datepickerFrom = null;
+//     this._datepickerTo = null;
+
+//     this._closeClickHandler = this._closeClickHandler.bind(this);
+//     this._submitClickHandler = this._submitClickHandler.bind(this);
+//     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
+//     this._typeChangeHandler = this._typeChangeHandler.bind(this);
+//     this._cityChangeHandler = this._cityChangeHandler.bind(this);
+//     this._priceChangeHandler = this._priceChangeHandler.bind(this);
+//     this._DateFromChangeHandler = this._DateFromChangeHandler.bind(this);
+//     this._DateToChangeHandler = this._DateToChangeHandler.bind(this);
+
+//     this._setInnertHandlers();
+//     this._setDatepicker();
+//   }
+
+//   getTemplate() {
+//     const isNewEvent = (!this._newPoint);
+
+//     return createEditPointForm(this._data, isNewEvent);
+//   }
+
+//   _typeChangeHandler(evt) {
+//     if (evt.target.tagName === 'INPUT') {
+//       this.updateData(
+//         {
+//           type: evt.target.value,
+//           offer: generateOffers(evt.target.value, OffersByType),
+//         },
+//       );
+//     }
+//   }
+
+//   _cityChangeHandler(evt) {
+//     const inputValue = evt.target.value;
+//     const isCityExist = CITIES.includes(capitalizeFirstLetter(inputValue));
+//     evt.preventDefault();
+//     if (inputValue.length <= 0 || isCityExist === false) {
+//       evt.target.setCustomValidity('please select a city from the list');
+//     } else {
+//       evt.target.setCustomValidity('');
+//       this.updateData(
+//         {
+//           destination: {
+//             description: DESTINATION_DESCRIPTION.slice(0, getRandomInteger(1, DESTINATION_DESCRIPTION.length)).join(''),
+//             city: capitalizeFirstLetter(inputValue),
+//             pictures: [
+//               {
+//                 src: DESTINATION_PHOTO + Math.random(),
+//                 description: generatePictyreDescription(),
+//               },
+//             ],
+//           },
+//         },
+//       );
+//     }
+//     evt.target.reportValidity();
+//   }
+
+//   _priceChangeHandler(evt) {
+//     const priceInput = evt.target.value;
+//     const isNotNumber = isNaN(priceInput);
+//     evt.preventDefault();
+//     if (priceInput <= 0 || isNotNumber) {
+//       evt.target.setCustomValidity('please use only positive numbers');
+//     } else {
+//       evt.target.setCustomValidity('');
+//       this.updateData(
+//         {
+//           basePrice: + evt.target.value,
+//         },
+//         true,
+//       );
+//     }
+//     evt.target.reportValidity();
+//   }
+
+//   removeElement() {
+//     super.removeElement();
+
+//     if (this._datepickerFrom) {
+//       this._datepickerFrom.destroy();
+//       this._datepickerFrom = null;
+//     }
+
+//     if(this._datepickerTo) {
+//       this._datepickerTo.destroy();
+//       this._datepickerTo = null;
+//     }
+//   }
+
+//   reset(point) {
+//     this.updateData(
+//       EditEvent.parsePointToData(point),
+//     );
+//   }
+
+//   _formDeleteClickHandler(evt) {
+//     evt.preventDefault();
+//     this._callback.deleteClick(EditEvent.parseDataToPoin(this._data));
+//   }
+
+//   setDeleteClickHandler(callback) {
+//     this._callback.deleteClick = callback;
+//     this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
+//   }
+
+//   _closeClickHandler(evt) {
+//     evt.preventDefault();
+//     this._callback.closeClick();
+//   }
+
+//   setCloseClickHandler(callback) {
+//     this._callback.closeClick = callback;
+//     if (this.getElement().querySelector('.event__rollup-btn')) {
+//       this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+//     }
+//   }
+
+//   _setDatepicker() {
+//     this._setDatepickerFrom();
+//     this._setDatepickerTo();
+//   }
+
+//   _setDatepickerFrom() {
+//     this._datepickerFrom = flatpickr(
+//       this.getElement().querySelector('[name = "event-start-time"]'),
+//       {
+//         dateFormat: 'd/m/y H:i',
+//         enableTime: true,
+//         'time_24hr': true,
+//         defaultDate: this._data.dateFrom,
+//         onChange: this._DateFromChangeHandler,
+//       },
+//     );
+//   }
+
+//   _setDatepickerTo() {
+//     this._datepickerTo = flatpickr(
+//       this.getElement().querySelector('[name = "event-end-time"]'),
+//       {
+//         dateFormat: 'd/m/y H:i',
+//         enableTime: true,
+//         'time_24hr': true,
+//         minDate: this._data.dateFrom,
+//         defaultDate: this._data.dateTo,
+//         onChange: this._DateToChangeHandler,
+//       },
+//     );
+//   }
+
+//   _DateFromChangeHandler([userDate]) {
+//     this.updateData(
+//       {
+//         dateFrom: userDate,
+//       },
+//     );
+//   }
+
+//   _DateToChangeHandler([userDate]) {
+//     this.updateData(
+//       {
+//         dateTo: userDate,
+//       },
+//     );
+//   }
+
+//   _submitClickHandler(evt) {
+//     evt.preventDefault();
+//     this._callback.submitClick(EditEvent.parseDataToPoin(this._data));
+//   }
+
+//   setSubmitClickHandler(callback) {
+//     this._callback.submitClick = callback;
+//     this.getElement().querySelector('form').addEventListener('submit', this._submitClickHandler);
+//   }
+
+//   _setInnertHandlers() {
+//     this.getElement().querySelector('.event__type-list').addEventListener('click', this._typeChangeHandler);
+//     this.getElement().querySelector('.event__input--destination').addEventListener('change', this._cityChangeHandler);
+//     this.getElement().querySelector('.event__input--price').addEventListener('input', this._priceChangeHandler);
+//     if (this.getElement().querySelector('.event__rollup-btn')) {
+//       this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._closeClickHandler);
+//     }
+//   }
+
+//   restoreHandlers() {
+//     this._setInnertHandlers();
+//     this._setDatepicker();
+//     this.setSubmitClickHandler(this._callback.submitClick);
+//     this.setDeleteClickHandler(this._callback.deleteClick);
+//   }
+
+//   static parsePointToData(point) {
+//     return Object.assign(
+//       {},
+//       point,
+//     );
+//   }
+
+//   static parseDataToPoin(data) {
+//     data = Object.assign(
+//       {},
+//       data,
+//     );
+//     return data;
+//   }
+// }
