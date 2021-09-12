@@ -1,11 +1,12 @@
 import SiteMenuView from './view/trip-menu.js';
 import PointsModel from './model/points.js';
-import { generateTask } from './mock/task-mock.js';
+import {generateTask} from './mock/task-mock.js';
 import { render, RenderPosition} from './utils/redner.js';
 import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filters.js';
 import { MenuItem } from './const.js';
+import OffersModel from './model/offers.js';
 
 const POINT_COUNT = 5;
 const points = new Array(POINT_COUNT).fill().map(generateTask);
@@ -22,6 +23,7 @@ const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
 const filterModel = new FilterModel();
+const offersModel = new OffersModel();
 
 const handlePointNewFormClose = () => {
   newPointButton.disabled = false;
@@ -31,7 +33,7 @@ const siteMenuComponent = new SiteMenuView();
 render(siteNavigationElement, siteMenuComponent, RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(siteFiltersElement, filterModel, pointsModel);
-const tripPresenter = new TripPresenter(siteTripEventElement, siteTripElement, pointsModel, filterModel);
+const tripPresenter = new TripPresenter(siteTripEventElement, siteTripElement, pointsModel, filterModel, offersModel);
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {

@@ -10,11 +10,12 @@ import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point';
 import { filter } from '../utils/filter';
 
 export default class Trip {
-  constructor(tripContainer, routContainer, pointsModel, filterModel) {
+  constructor(tripContainer, routContainer, pointsModel, filterModel, offersModel) {
     this._tripContainer = tripContainer;
     this._routContainer = routContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
+    this._offersModel = offersModel;
     this._pointPresenter = new Map();
     this._currentSortType = SortType.DAY.name;
     this._filterType = FilterType.EVERYTHING;
@@ -51,10 +52,11 @@ export default class Trip {
   }
 
   createPoint(callback) {
+    this._offers = this._offersModel.getOffers();
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
 
-    this._pointNewPresenter.init(callback);
+    this._pointNewPresenter.init(this._offers, callback);
   }
 
   _getPoints() {
@@ -142,8 +144,9 @@ export default class Trip {
   }
 
   _renderPoint(point) {
+    this._offers = this._offersModel.getOffers();
     const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point, this._offers);
     this._pointPresenter.set(point.id, pointPresenter);
   }
 

@@ -106,7 +106,7 @@ const createEventTypeList = (id) => (
   )).join('')
 );
 
-const createEditPointForm = (data, isNewEvent) => {
+const createEditPointForm = (data, offers, isNewEvent) => {
   const {type, basePrice, dateFrom, dateTo, destination, offer, id} = data;
 
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
@@ -188,9 +188,10 @@ const createEditPointForm = (data, isNewEvent) => {
 export default class EditEvent extends SmartView {
   constructor(data) {
     super();
-    const {point = BLANK_POINT} = data;
+    const {point = BLANK_POINT, offers} = data;
     this._data = EditEvent.parsePointToData(point);
     this._newPoint = !data.point;
+    this._offers = offers;
 
     this._datepickerFrom = null;
     this._datepickerTo = null;
@@ -211,7 +212,7 @@ export default class EditEvent extends SmartView {
   getTemplate() {
     const isNewEvent = (this._newPoint);
 
-    return createEditPointForm(this._data, isNewEvent);
+    return createEditPointForm(this._data, this._offers, isNewEvent);
   }
 
   _typeChangeHandler(evt) {
