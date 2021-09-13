@@ -4,21 +4,9 @@ import { getRandomInteger, capitalizeFirstLetter } from '../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from './smart';
 import { nanoid } from 'nanoid';
+import { formValidity } from '../utils/form-validity';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-
-const onCityChange = () => {
-  const city = document.querySelector('.event__input--destination');
-  console.log(typeof city.value);
-
-  if (city.value === '') {
-    city.setCustomValidity('НИЗЯ');
-  } else {
-    city.setCustomValidity('');
-  }
-
-  city.reportValidity();
-};
 
 const BLANK_POINT = {
   type: 'Taxi',
@@ -57,14 +45,17 @@ const createAdditionalOffer = (checkedOffers, availableOffers, id) => {
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
     <div class="event__available-offers">
-    ${availableOffers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" data-title="${title.toLowerCase()}" data-price="${price}" id="event-offer-${title.split(' ').pop()}-${id}" type="checkbox" name="event-offer-${title.split(' ').pop()}" ${getOffersChecked(title)}>
-    <label class="event__offer-label" for="event-offer-${title.split(' ').pop()}-${id}">
+    ${availableOffers.map(({title, price}) => {
+    const lastWordOnTitle = title.split(' ').pop();
+
+    return `<div class="event__offer-selector">
+    <input class="event__offer-checkbox  visually-hidden" data-title="${title.toLowerCase()}" data-price="${price}" id="event-offer-${lastWordOnTitle}-${id}" type="checkbox" name="event-offer-${lastWordOnTitle}" ${getOffersChecked(title)}>
+    <label class="event__offer-label" for="event-offer-${lastWordOnTitle}-${id}">
       <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
       <span class="event__offer-price">${price}</span>
     </label>
-  </div>`).join('')}
+  </div>`;}).join('')}
     </div>
   </section>`;
   }
@@ -102,12 +93,14 @@ const createCityList = () => (
 
 //генерация тайп-листа
 const createEventTypeList = (id) => (
-  TYPE.map((typeEvent) => (
-    `<div class="event__type-item">
-      <input id="event-type-${typeEvent.toLowerCase()}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent}">
-      <label class="event__type-label  event__type-label--${typeEvent.toLowerCase()}" for="event-type-${typeEvent.toLowerCase()}-${id}">${typeEvent}</label>
-    </div>`
-  )).join('')
+  TYPE.map((typeEvent) => {
+    const typeEventInLoweCase = typeEvent.toLowerCase();
+
+    return `<div class="event__type-item">
+      <input id="event-type-${typeEventInLoweCase}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${typeEvent}">
+      <label class="event__type-label  event__type-label--${typeEventInLoweCase}" for="event-type-${typeEventInLoweCase}-${id}">${typeEvent}</label>
+    </div>`;
+  }).join('')
 );
 
 const createEditPointForm = (data, offers, isNewEvent) => {
@@ -387,8 +380,11 @@ export default class EditEvent extends SmartView {
 
   _submitClickHandler(evt) {
     evt.preventDefault();
-    onCityChange();
-    this._callback.submitClick(EditEvent.parseDataToPoin(this._data));
+    formValidity(evt);
+
+    if(evt.target.checkValidity()) {
+      this._callback.submitClick(EditEvent.parseDataToPoin(this._data));
+    }
   }
 
   setSubmitClickHandler(callback) {
