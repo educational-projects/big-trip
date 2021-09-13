@@ -14,7 +14,7 @@ const points = new Array(POINT_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripElement = siteHeaderElement.querySelector('.trip-main');
-const siteMainContainer = siteHeaderElement.querySelector('.page-body__container');
+const siteMainContainer = document.querySelector('main.page-body__page-main .page-body__container');
 const siteNavigationElement = siteHeaderElement.querySelector('.trip-controls__navigation');
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-main');
@@ -58,8 +58,8 @@ const handleSiteMenuClick = (menuItem) => {
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
-tripPresenter.init();
-// render(siteMainContainer, new StatisticsView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
+// tripPresenter.init();
+render(siteMainContainer, new StatisticsView(pointsModel.getPoints()), RenderPosition.BEFOREEND);
 
 
 newPointButton.addEventListener('click', (evt) => {

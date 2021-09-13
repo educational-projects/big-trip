@@ -29,4 +29,8 @@ export default class Statistics extends SmartView {
   getTemplate() {
     return createStatisticsTemplate(this._points);
   }
+
+  _restoreHandlers() {
+    this._setCharts();
+  }
 }
