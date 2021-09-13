@@ -8,6 +8,6 @@ const getDiffTimePoint = (startTime, endTime) => {
   return endEvent.diff(startEvent);
 };
 
-export const sortPointDay = (pointA, pointB) => pointA.dateTo - pointB.dateTo;
+export const sortPointDay = (pointA, pointB) => pointA.dateFrom - pointB.dateFrom;
 
 export const sortPointTime = (pointA, pointB) => getDiffTimePoint(pointB.dateFrom, pointB.dateTo) - getDiffTimePoint(pointA.dateFrom, pointA.dateTo);

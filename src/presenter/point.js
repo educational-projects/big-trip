@@ -1,6 +1,7 @@
 import TripEventView from '../view/trip-event';
 import EditEventView from '../view/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/redner';
+import { UserAction, UpdateType } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -22,21 +23,23 @@ export default class Point {
     this._handlePointClick = this._handlePointClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init(point) {
+  init(point, offers) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new TripEventView(point);
-    this._pointEditComponent = new EditEventView(point);
+    this._pointEditComponent = new EditEventView({point, offers});
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._pointEditComponent.setCloseClickHandler(this._handlePointClick);
     this._pointEditComponent.setSubmitClickHandler(this._handleFormSubmit);
+    this._pointEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this._pointListContainer, this._pointComponent, RenderPosition.BEFOREEND);
@@ -68,7 +71,11 @@ export default class Point {
 
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
+
+    // const priceInput = document.querySelector('.event__input--price');
+    // priceInput.setAttribute('type', 'number');
     document.addEventListener('keydown', this._onEscKeyDown);
+
     this._changeMode();
     this._mode = Mode.EDITING;
 
@@ -82,6 +89,8 @@ export default class Point {
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
       Object.assign(
         {},
         this._point,
@@ -109,7 +118,20 @@ export default class Point {
     this._replaceFormToPoint();
   }
 
-  _handleFormSubmit() {
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  }
+
+  _handleFormSubmit(point) {
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
     this._replaceFormToPoint();
   }
 }

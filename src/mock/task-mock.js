@@ -7,7 +7,8 @@ const TYPE = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Si
 //список городов путешествия
 const CITIES = ['Петрозаводск', 'Сегежа', 'Кондопога', 'Олонец', 'Сортовала'];
 
-//описание городов
+// описание городов
+
 export const DESTINATION_DESCRIPTION = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
@@ -120,9 +121,8 @@ export const OffersByType = {
 
 //случайная генерация даты окончания точки путешествия
 const generateDate = () => {
-  const startDate = dayjs();
-  const diffTime = startDate.date() + getRandomInteger(60, 2880);
-  const endDate = dayjs().add(diffTime, 'm');
+  const startDate = dayjs().add(getRandomInteger(-2880, 2880), 'm');
+  const endDate = startDate.add(getRandomInteger(0, 2880), 'm');
 
   return {
     startDate,

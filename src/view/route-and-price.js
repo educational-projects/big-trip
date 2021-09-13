@@ -1,16 +1,16 @@
 import AbstractView from './abstract';
 import dayjs from 'dayjs';
 
-const showWay = (tasks) => {
-  if (tasks.length >= 4) {
-    return `${tasks[0].destination.city} — ... — ${tasks[tasks.length -1].destination.city}`;
+const showWay = (points) => {
+  if (points.length >= 4) {
+    return `${points[0].destination.city} — ... — ${points[points.length -1].destination.city}`;
   }
-  return tasks.map((task) => task.destination.city).join(' — ');
+  return points.map((task) => task.destination.city).join(' — ');
 };
 
-const showDate = (tasks) => {
-  const startData = tasks[0].dateFrom;
-  const endData = tasks[tasks.length - 1].dateTo;
+const showDate = (points) => {
+  const startData = points[0].dateFrom;
+  const endData = points[points.length - 1].dateTo;
 
   const startMonth = dayjs(startData).format('MMM');
   const endMonth = dayjs(endData).format('MMM');
@@ -22,10 +22,10 @@ const showDate = (tasks) => {
 
 const getTotalPrice = (points) => points.reduce((sum, {basePrice}) => sum + basePrice, 0);
 
-const createRouteAndPriceTemplate = (tasks) => {
-  const way = showWay(tasks);
-  const data = showDate(tasks);
-  const totalPrice = getTotalPrice(tasks);
+const createRouteAndPriceTemplate = (points) => {
+  const way = showWay(points);
+  const data = showDate(points);
+  const totalPrice = getTotalPrice(points);
 
   return `<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">
@@ -41,12 +41,12 @@ const createRouteAndPriceTemplate = (tasks) => {
 };
 
 export default class RouteAndPrice extends AbstractView {
-  constructor(task) {
+  constructor(points) {
     super();
-    this._task = task;
+    this._points = points;
   }
 
   getTemplate() {
-    return createRouteAndPriceTemplate(this._task);
+    return createRouteAndPriceTemplate(this._points);
   }
 }
