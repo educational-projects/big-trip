@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { getDurationTime, makeItemsUniq } from '../utils/statistics';
 
 const moneyChart = (moneyCtx, points) => {
-//   //функция для отрисовки графиков по цене
+// //   //функция для отрисовки графиков по цене
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
   const moneyArray =  Array.from(points.reduce((point, { type, basePrice }) => point.set(type, (point.get(type) || 0) + basePrice), new Map));
@@ -25,6 +25,11 @@ const moneyChart = (moneyCtx, points) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 45,
+        },
+      },
       plugins: {
         datalabels: {
           font: {
@@ -54,7 +59,6 @@ const moneyChart = (moneyCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -65,7 +69,6 @@ const moneyChart = (moneyCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
         }],
       },
       legend: {
@@ -79,7 +82,7 @@ const moneyChart = (moneyCtx, points) => {
 };
 
 const typeChart = (typeCtx, points) => {
-  //функция для отрисовки графиков по типу
+//   //функция для отрисовки графиков по типу
   const types = points.map((point) => point.type);
   const uniqTypes = makeItemsUniq(types);
   const typeArray =  Array.from(points.reduce((point, {type}) => point.set(type, (point.get(type) || 0) + 1), new Map));
@@ -99,6 +102,11 @@ const typeChart = (typeCtx, points) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 45,
+        },
+      },
       plugins: {
         datalabels: {
           font: {
@@ -128,7 +136,6 @@ const typeChart = (typeCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -139,7 +146,6 @@ const typeChart = (typeCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
         }],
       },
       legend: {
@@ -172,6 +178,11 @@ const timeChart = (timeCtx, points) => {
       }],
     },
     options: {
+      layout: {
+        padding: {
+          left: 45,
+        },
+      },
       plugins: {
         datalabels: {
           font: {
@@ -185,7 +196,7 @@ const timeChart = (timeCtx, points) => {
       },
       title: {
         display: true,
-        text: 'TYPE',
+        text: 'TIME-SPEND',
         fontColor: '#000000',
         fontSize: 23,
         position: 'left',
@@ -201,7 +212,6 @@ const timeChart = (timeCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          barThickness: 44,
         }],
         xAxes: [{
           ticks: {
@@ -212,7 +222,6 @@ const timeChart = (timeCtx, points) => {
             display: false,
             drawBorder: false,
           },
-          minBarLength: 50,
         }],
       },
       legend: {
