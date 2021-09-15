@@ -9,13 +9,13 @@ import { MenuItem } from './const.js';
 import OffersModel from './model/offers.js';
 import StatisticsView from './view/statistic.js';
 
-const POINT_COUNT = 0;
+const POINT_COUNT = 5;
 const points = new Array(POINT_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripElement = siteHeaderElement.querySelector('.trip-main');
 const siteMainContainer = document.querySelector('main.page-body__page-main .page-body__container');
-const siteNavigationElement = siteHeaderElement.querySelector('.trip-controls__navigation');
+const menuContainer = siteHeaderElement.querySelector('.trip-controls__navigation');
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
@@ -33,7 +33,7 @@ const handlePointNewFormClose = () => {
 };
 
 const siteMenuComponent = new SiteMenuView(pointsModel.getPoints());
-render(siteNavigationElement, siteMenuComponent, RenderPosition.BEFOREEND);
+render(menuContainer, siteMenuComponent, RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(siteFiltersElement, filterModel, pointsModel);
 const tripPresenter = new TripPresenter(siteTripEventElement, siteTripElement, pointsModel, filterModel, offersModel);

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { CITIES, DESTINATION_DESCRIPTION, DESTINATION_PHOTO, generateOffers, generatePictyreDescription, OffersByType, TYPE } from '../mock/task-mock';
+import { CITIES, DESTINATION_DESCRIPTION, DESTINATION_PHOTO, generatePictyreDescription, TYPE } from '../mock/task-mock';
 import { getRandomInteger, capitalizeFirstLetter } from '../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from './smart';
@@ -219,7 +219,7 @@ export default class EditEvent extends SmartView {
       this.updateData(
         {
           type: evt.target.value,
-          offer: generateOffers(evt.target.value, OffersByType),
+          offer: [],
         },
       );
     }

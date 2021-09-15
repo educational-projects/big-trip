@@ -1,14 +1,10 @@
 import { MenuItem } from '../const';
 import AbstractView from './abstract';
 
-const blockedLink = 'style="pointer-events: none; opacity:0.5" ';
-
-const isDisabled = (points) => !points.length ? blockedLink : '';
-
-const createMenuTemplate = (points) => (
+const createMenuTemplate = () => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">
   <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">${MenuItem.TABLE}</a>
-  <a class="trip-tabs__btn" href="#" ${isDisabled(points.length)}>${MenuItem.STATS}</a>
+  <a class="trip-tabs__btn" href="#">${MenuItem.STATS}</a>
   </nav>`
 );
 
