@@ -1,22 +1,27 @@
 import { MenuItem } from '../const';
 import AbstractView from './abstract';
 
-const createMenuTemplate = () => (
+const blockedLink = 'style="pointer-events: none; opacity:0.5" ';
+
+const isDisabled = (points) => !points.length ? blockedLink : '';
+
+const createMenuTemplate = (points) => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">
   <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">${MenuItem.TABLE}</a>
-  <a class="trip-tabs__btn" href="#" value="a">${MenuItem.STATS}</a>
+  <a class="trip-tabs__btn" href="#" ${isDisabled(points.length)}>${MenuItem.STATS}</a>
   </nav>`
 );
 
 export default class SiteMenu extends AbstractView {
-  constructor() {
+  constructor(points) {
     super();
+    this._points = points;
 
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createMenuTemplate();
+    return createMenuTemplate(this._points);
   }
 
   _menuClickHandler(evt) {

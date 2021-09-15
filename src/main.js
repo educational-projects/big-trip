@@ -9,7 +9,7 @@ import { MenuItem } from './const.js';
 import OffersModel from './model/offers.js';
 import StatisticsView from './view/statistic.js';
 
-const POINT_COUNT = 10;
+const POINT_COUNT = 0;
 const points = new Array(POINT_COUNT).fill().map(generateTask);
 
 const siteHeaderElement = document.querySelector('.page-header');
@@ -32,7 +32,7 @@ const handlePointNewFormClose = () => {
   newPointButton.disabled = false;
 };
 
-const siteMenuComponent = new SiteMenuView();
+const siteMenuComponent = new SiteMenuView(pointsModel.getPoints());
 render(siteNavigationElement, siteMenuComponent, RenderPosition.BEFOREEND);
 
 const filterPresenter = new FilterPresenter(siteFiltersElement, filterModel, pointsModel);
@@ -50,7 +50,7 @@ const handleSiteMenuClick = (menuItem) => {
       break;
     case MenuItem.STATS:
       tripPresenter.destroy();
-      tripPresenter.renderRoutAndPrice();
+      tripPresenter.renderRoutAndPrice(points);
       siteMenuComponent.setMenuItem(MenuItem.STATS);
       statisticsComponent = new StatisticsView(pointsModel.getPoints());
       render(siteMainContainer, statisticsComponent, RenderPosition.BEFOREEND);
