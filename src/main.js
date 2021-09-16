@@ -19,7 +19,7 @@ const menuContainer = siteHeaderElement.querySelector('.trip-controls__navigatio
 const siteFiltersElement = siteHeaderElement.querySelector('.trip-controls__filters');
 const siteMainElement = document.querySelector('.page-main');
 const siteTripEventElement = siteMainElement.querySelector('.trip-events');
-const newPointButton = document.querySelector('.trip-main__event-add-btn');
+const newPointButton = siteHeaderElement.querySelector('.trip-main__event-add-btn');
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
@@ -46,12 +46,17 @@ const handleSiteMenuClick = (menuItem) => {
       remove(statisticsComponent);
       tripPresenter.destroy();
       tripPresenter.init();
+      newPointButton.disabled = false;
+      document.querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = false);
       siteMenuComponent.setMenuItem(MenuItem.TABLE);
       break;
     case MenuItem.STATS:
       tripPresenter.destroy();
       tripPresenter.renderRoutAndPrice(points);
       siteMenuComponent.setMenuItem(MenuItem.STATS);
+      newPointButton.disabled = true;
+      document.querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = true);
+
       statisticsComponent = new StatisticsView(pointsModel.getPoints());
       render(siteMainContainer, statisticsComponent, RenderPosition.BEFOREEND);
       break;
@@ -59,6 +64,7 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+
 
 filterPresenter.init();
 tripPresenter.init();
