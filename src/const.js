@@ -43,3 +43,9 @@ export const MenuItem = {
   TABLE: 'Table',
   STATS: 'Stats',
 };
+
+export const CanvasType = {
+  MONEY: 'money',
+  TYPE: 'type',
+  TIME: 'time-spend',
+};

@@ -23,6 +23,7 @@ export default class Trip {
     this._sortComponent = null;
     this._routAndPriceComponent = null;
     this._noTripComponent = null;
+    this._menuComponent = null;
 
     this._tripListComponent = new TripEventListView();
 
@@ -126,6 +127,12 @@ export default class Trip {
   }
 
   renderRoutAndPrice() {
+    const points = this._pointsModel.getPoints();
+    if (!points.length) {
+      return;
+    }
+
+
     if(this._routAndPriceComponent !== null) {
       this._routAndPriceComponent = null;
     }

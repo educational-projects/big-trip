@@ -72,8 +72,6 @@ export default class Point {
   _replacePointToForm() {
     replace(this._pointEditComponent, this._pointComponent);
 
-    // const priceInput = document.querySelector('.event__input--price');
-    // priceInput.setAttribute('type', 'number');
     document.addEventListener('keydown', this._onEscKeyDown);
 
     this._changeMode();
