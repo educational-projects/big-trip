@@ -8,6 +8,7 @@ import pointNewPresenter from './new-point';
 import { SortType, UserAction, UpdateType, FilterType } from '../const';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point';
 import { filter } from '../utils/filter';
+import LoadingView from '../view/loading';
 
 export default class Trip {
   constructor(tripContainer, routContainer, pointsModel, filterModel, offersModel) {
@@ -19,6 +20,7 @@ export default class Trip {
     this._pointPresenter = new Map();
     this._currentSortType = SortType.DAY.name;
     this._filterType = FilterType.EVERYTHING;
+    this._isLoading = true;
 
     this._sortComponent = null;
     this._routAndPriceComponent = null;
@@ -26,6 +28,7 @@ export default class Trip {
     this._menuComponent = null;
 
     this._tripListComponent = new TripEventListView();
+    this._loadingComponent = new LoadingView();
 
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
@@ -107,6 +110,11 @@ export default class Trip {
         this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderTrip();
+        break;
     }
   }
 
@@ -174,6 +182,10 @@ export default class Trip {
     render(this._tripContainer, this._noTripComponent, RenderPosition.BEFOREEND);
   }
 
+  _renderLoading() {
+    render(this._tripContainer, this._loadingComponent, RenderPosition.BEFOREEND);
+  }
+
   _clearTrip({resetSortType = false} = {}) {
     this._pointNewPresenter.destroy();
     this._pointPresenter.forEach((presenter) =>presenter.destroy());
@@ -181,6 +193,7 @@ export default class Trip {
 
     remove(this._noTripComponent);
     remove(this._sortComponent);
+    remove(this._loadingComponent);
     remove(this._tripListComponent);
     remove(this._routAndPriceComponent);
 
@@ -190,6 +203,12 @@ export default class Trip {
   }
 
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
+
     if (!this._getPoints().length) {
       this._renderNoTrip();
       return;

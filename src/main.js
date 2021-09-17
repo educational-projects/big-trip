@@ -5,12 +5,20 @@ import { remove, render, RenderPosition} from './utils/redner.js';
 import TripPresenter from './presenter/trip.js';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filters.js';
-import { MenuItem } from './const.js';
+import { MenuItem, UpdateType } from './const.js';
 import OffersModel from './model/offers.js';
 import StatisticsView from './view/statistic.js';
+import Api from './api.js';
 
-const POINT_COUNT = 5;
-const points = new Array(POINT_COUNT).fill().map(generateTask);
+const POINT_COUNT = 1;
+const pointsMok = new Array(POINT_COUNT).fill().map(generateTask);
+console.log(pointsMok);
+
+
+const AUTHORIZATION = 'Basic gd4v185jv45128n';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip';
+
+const api = new Api(END_POINT, AUTHORIZATION);
 
 const siteHeaderElement = document.querySelector('.page-header');
 const siteTripElement = siteHeaderElement.querySelector('.trip-main');
@@ -22,7 +30,7 @@ const siteTripEventElement = siteMainElement.querySelector('.trip-events');
 const newPointButton = siteHeaderElement.querySelector('.trip-main__event-add-btn');
 
 const pointsModel = new PointsModel();
-pointsModel.setPoints(points);
+// pointsModel.setPoints(points);
 
 const filterModel = new FilterModel();
 const offersModel = new OffersModel();
@@ -52,7 +60,7 @@ const handleSiteMenuClick = (menuItem) => {
       break;
     case MenuItem.STATS:
       tripPresenter.destroy();
-      tripPresenter.renderRoutAndPrice(points);
+      // tripPresenter.renderRoutAndPrice(points);
       siteMenuComponent.setMenuItem(MenuItem.STATS);
       newPointButton.disabled = true;
       document.querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = true);
@@ -75,3 +83,12 @@ newPointButton.addEventListener('click', (evt) => {
   newPointButton.disabled = true;
   tripPresenter.createPoint(handlePointNewFormClose);
 });
+
+api.getPoints()
+  .then((points) => {
+    console.log(points);
+    pointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+  });
