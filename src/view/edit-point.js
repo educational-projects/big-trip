@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import { getFirstLetterInCapitalLetters } from '../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from './smart';
-import { nanoid } from 'nanoid';
 import { formValidity } from '../utils/form-validity';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
@@ -12,7 +11,6 @@ const BLANK_POINT = {
   basePrice: '',
   dateFrom: new Date(),
   dateTo: new Date(),
-  id: nanoid(),
   offer: [],
   destination: {
     description: '',

@@ -26,7 +26,6 @@ const createRouteAndPriceTemplate = (points) => {
   const way = showWay(points);
   const data = showDate(points);
   const totalPrice = getTotalPrice(points);
-  console.log();
 
   return `<section class="trip-main__trip-info  trip-info">
   <div class="trip-info__main">
