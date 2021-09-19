@@ -86,7 +86,7 @@ export default class Points extends AbstractObserver {
         'base_price': point.basePrice,
         'offers': point.offer,
         'date_from': point.dateFrom,
-        'date_to': point.date_to,
+        'date_to': point.dateTo,
         'is_favorite': point.isFavorite,
       },
     );
@@ -94,7 +94,7 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.basePrice;
     delete adaptedPoint.offer;
     delete adaptedPoint.dateFrom;
-    delete adaptedPoint.date_to;
+    delete adaptedPoint.dateTo;
     delete adaptedPoint.isFavorite;
 
     return adaptedPoint;

@@ -20,20 +20,20 @@ export default class Point {
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._handleEditClick = this._handleEditClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handlePointClick = this._handlePointClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
   }
 
-  init(point, offers) {
+  init(point, offers, destinations) {
     this._point = point;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new TripEventView(point);
-    this._pointEditComponent = new EditEventView({point, offers});
+    this._pointEditComponent = new EditEventView({point, offers, destinations});
 
     this._pointComponent.setEditClickHandler(this._handleEditClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -56,6 +56,7 @@ export default class Point {
 
     remove(prevPointComponent);
     remove(prevPointEditComponent);
+
   }
 
   destroy() {

@@ -7,5 +7,8 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-//Функция возращает строку с заглавной буквы
-export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
+//Функция преобразует первые буквы каждого слова в заглавную
+export const getFirstLetterInCapitalLetters = (string) => string
+  .split(/\s+/)
+  .map((word) => word[0].toUpperCase() + word.substring(1).toLowerCase())
+  .join(' ');

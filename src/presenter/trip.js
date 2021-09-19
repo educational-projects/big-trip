@@ -11,12 +11,14 @@ import { filter } from '../utils/filter';
 import LoadingView from '../view/loading';
 
 export default class Trip {
-  constructor(tripContainer, routContainer, pointsModel, filterModel, offersModel) {
+  constructor(tripContainer, routContainer, pointsModel, filterModel, offersModel, destinationsModel, api) {
     this._tripContainer = tripContainer;
     this._routContainer = routContainer;
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
+    this._api = api;
     this._pointPresenter = new Map();
     this._currentSortType = SortType.DAY.name;
     this._filterType = FilterType.EVERYTHING;
@@ -57,12 +59,13 @@ export default class Trip {
 
   createPoint(callback) {
     this._offers = this._offersModel.getOffers();
+    this._destinations = this._destinationsModel.getDestinations();
     this._currentSortType = SortType.DAY.name;
     this._filterModel.setFilter(UpdateType.MINOR, FilterType.EVERYTHING);
 
     remove(this._noTripComponent);
     render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
-    this._pointNewPresenter.init(this._offers, callback);
+    this._pointNewPresenter.init(this._offers, this._destinations, callback);
   }
 
   _getPoints() {
@@ -83,7 +86,9 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch(actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update).then((response) => {
+          this._pointsModel.updatePoint(updateType, response);
+        });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
@@ -162,8 +167,10 @@ export default class Trip {
 
   _renderPoint(point) {
     this._offers = this._offersModel.getOffers();
+    this._destinations = this._destinationsModel.getDestinations();
+
     const pointPresenter = new PointPresenter(this._tripListComponent, this._handleViewAction, this._handleModeChange);
-    pointPresenter.init(point, this._offers);
+    pointPresenter.init(point, this._offers, this._destinations);
     this._pointPresenter.set(point.id, pointPresenter);
   }
 
