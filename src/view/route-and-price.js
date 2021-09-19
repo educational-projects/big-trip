@@ -3,9 +3,9 @@ import dayjs from 'dayjs';
 
 const showWay = (points) => {
   if (points.length >= 4) {
-    return `${points[0].destination.city} — ... — ${points[points.length -1].destination.city}`;
+    return `${points[0].destination.name} — ... — ${points[points.length -1].destination.name}`;
   }
-  return points.map((task) => task.destination.city).join(' — ');
+  return points.map((point) => point.destination.name).join(' — ');
 };
 
 const showDate = (points) => {

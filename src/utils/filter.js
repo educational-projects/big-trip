@@ -1,11 +1,12 @@
+import dayjs from 'dayjs';
 import { FilterType } from '../const';
 
-const currentDay = new Date ();
+const currentDay = dayjs();
 
-const IsPointsAllFilters = (point) => point.dateFrom < currentDay && point.dateTo > currentDay;
+const IsPointsAllFilters = (point) => dayjs(point.dateFrom) < currentDay && dayjs(point.dateTo) > currentDay;
 
 export const filter = {
   [FilterType.EVERYTHING]: (points) => points.filter((point) => point),
-  [FilterType.FUTURE]: (points) => points.filter((point) => point.dateFrom >= currentDay || IsPointsAllFilters(point)),
-  [FilterType.PAST]: (points) => points.filter((point) => point.dateTo < currentDay || IsPointsAllFilters(point)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => dayjs(point.dateFrom) >= currentDay || IsPointsAllFilters(point)),
+  [FilterType.PAST]: (points) => points.filter((point) => dayjs(point.dateTo) < currentDay || IsPointsAllFilters(point)),
 };
