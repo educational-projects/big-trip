@@ -5,7 +5,7 @@ const showWay = (points) => {
   if (points.length >= 4) {
     return `${points[0].destination.name} — ... — ${points[points.length -1].destination.name}`;
   }
-  return points.map((point) => point.destination.city).join(' — ');
+  return points.map((point) => point.destination.name).join(' — ');
 };
 
 const showDate = (points) => {
