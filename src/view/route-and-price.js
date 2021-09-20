@@ -20,7 +20,10 @@ const showDate = (points) => {
   return `${dayjs(startData).format('MMM DD')} — ${dayjs(endData).format(isOneMonth)}`;
 };
 
-const getTotalPrice = (points) => points.reduce((sum, {basePrice}) => sum + basePrice, 0);
+const getTotalPrice = (points) => points.reduce((sumPoints, point) => {
+  const totalOffersPrice = point.offer.reduce((sumOffers, {price}) => sumOffers + price, 0);
+  return sumPoints + point.basePrice + totalOffersPrice;
+}, 0);
 
 const createRouteAndPriceTemplate = (points) => {
   const way = showWay(points);

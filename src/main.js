@@ -67,10 +67,8 @@ const handleSiteMenuClick = (menuItem) => {
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
-
 filterPresenter.init();
 tripPresenter.init();
-
 
 newPointButton.addEventListener('click', (evt) => {
   evt.preventDefault();

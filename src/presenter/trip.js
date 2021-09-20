@@ -127,10 +127,8 @@ export default class Trip {
       case UpdateType.MINOR:
         this._clearTrip();
         this._renderTrip();
-        //обновить часть проекта
         break;
       case UpdateType.MAJOR:
-        //обновить проект полностью
         this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;

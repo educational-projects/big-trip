@@ -31,13 +31,9 @@ const createContentButton = (isNewEvent, isDeleting) => {
   const editButton = isDeleting ? 'Deleting...' : 'Delete';
   return `${isNewEvent ? 'Cancel' : editButton}`;
 };
-// const createContentButton = (isNewEvent) => (
-//   `${isNewEvent ? 'Cancel' : 'Delete'}`
-// );
 
 //генерация дополнительных опций
 const createAdditionalOffer = (checkedOffers, availableOffers, id, isDisabled) => {
-  // console.log(availableOffers);
   const getOffersChecked = (offerTitle) => checkedOffers
     .map(({title}) => title.toLowerCase())
     .includes(offerTitle.toLowerCase()) ? 'checked' : '' ;
@@ -106,13 +102,10 @@ const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
   const dateFromInDateValue = dayjs(dateFrom).format('DD/MM/YY HH:mm');
 
-  //генерация опций города
   const cityList = createCityList(Alldestinations);
 
-  //генерация тайп-листа
   const eventTypeList = createEventTypeList(AllOffers ,id);
 
-  //генерация дополнительных опций
   const additionalOffers = createAdditionalOffer(offer, availableOffersByType, id, isDisabled);
 
   const destinationList = createDestinationTemplate(destination);
