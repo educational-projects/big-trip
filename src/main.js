@@ -49,7 +49,7 @@ const handleSiteMenuClick = (menuItem) => {
       tripPresenter.destroy();
       tripPresenter.init();
       newPointButton.disabled = false;
-      document.querySelectorAll('.trip-filters__filter-input').forEach((filter) => filter.disabled = false);
+      filterPresenter.init();
       siteMenuComponent.setMenuItem(MenuItem.TABLE);
       break;
     case MenuItem.STATS:
@@ -67,7 +67,6 @@ const handleSiteMenuClick = (menuItem) => {
 
 siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
-filterPresenter.init();
 tripPresenter.init();
 
 newPointButton.addEventListener('click', (evt) => {

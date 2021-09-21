@@ -3,96 +3,12 @@ import { getFirstLetterInCapitalLetters } from '../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from './smart';
 import { formValidity } from '../utils/form-validity';
+import { BLANK_POINT } from '../const';
+import { createAdditionalOffer } from './edit-point-offers';
+import { createDestinationTemplate } from './edit-point-destinations';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-
-const BLANK_POINT = {
-  type: 'taxi',
-  basePrice: '',
-  dateFrom: new Date(),
-  dateTo: new Date(),
-  offer: [],
-  destination: {
-    description: '',
-    name: '',
-    pictures: [],
-  },
-  isFavorite: false,
-
-};
-
-const createEventRollupButtonTemplate = (isNewEvent, isDisabled) => (
-  `${!isNewEvent ? `<button class="event__rollup-btn" type="button" ${isDisabled? 'disabled' : ''}>
-    <span class="visually-hidden">Open event</span>
-  </button>`: ''}`
-);
-
-const createContentButton = (isNewEvent, isDeleting) => {
-  const editButton = isDeleting ? 'Deleting...' : 'Delete';
-  return `${isNewEvent ? 'Cancel' : editButton}`;
-};
-
-//генерация дополнительных опций
-const createAdditionalOffer = (checkedOffers, availableOffers, id, isDisabled) => {
-  const getOffersChecked = (offerTitle) => checkedOffers
-    .map(({title}) => title.toLowerCase())
-    .includes(offerTitle.toLowerCase()) ? 'checked' : '' ;
-
-  if (availableOffers.length) {
-    return  `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-    <div class="event__available-offers">
-    ${availableOffers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" data-title="${title.toLowerCase()}" data-price="${price}" id="event-offer-${title}-${id}" type="checkbox" name="event-offer-${title}" ${getOffersChecked(title)} ${isDisabled? 'disabled' : ''}>
-    <label class="event__offer-label" for="event-offer-${title}-${id}">
-      <span class="event__offer-title">${title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${price}</span>
-    </label>
-  </div>`).join('')}
-    </div>
-  </section>`;
-  }
-  return '';
-};
-
-const createDestinationTemplate = (destination) => {
-  const {description, pictures} = destination;
-
-  const createDestinationPhoto = () => {
-    if (pictures !== 0) {
-      return `<div class="event__photos-container">
-    <div class="event__photos-tape">
-      ${pictures.map(({src, descriptionPhoto}) => `<img class="event__photo" src="${src}" alt="${descriptionPhoto}">`).join('')}
-    </div>
-  </div>`;}
-  };
-
-  if (destination.name) {
-    return `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
-    ${createDestinationPhoto()}
-  </section>`;
-  }
-  return '';
-};
-
-//генерация опций города
-const createCityList = (destinations) => (
-  destinations.map(({name}) => (
-    `<option value="${name}"></option>`
-  )).join('')
-);
-
-//генерация тайп-листа
-const createEventTypeList = (offers ,id) => (
-  offers.map(({type}) => `<div class="event__type-item">
-      <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${type}</label>
-    </div>`).join('')
-);
+import { createCityList, createContentButton, createEventRollupButtonTemplate, createEventTypeList } from './edit-point-helpers';
 
 const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
   const {type, basePrice, dateFrom, dateTo, destination, offer, id, isDisabled, isSaving, isDeleting} = data;
