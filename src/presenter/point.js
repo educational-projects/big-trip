@@ -1,5 +1,5 @@
 import TripEventView from '../view/trip-event';
-import EditEventView from '../view/edit-point';
+import EditEventView from '../view/point-form/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/redner';
 import { UserAction, UpdateType } from '../const';
 

@@ -1,4 +1,4 @@
-import EditEventView from '../view/edit-point';
+import EditEventView from '../view/point-form/edit-point';
 import { remove, render, RenderPosition } from '../utils/redner';
 import { UserAction, UpdateType } from '../const';
 

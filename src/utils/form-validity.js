@@ -25,7 +25,6 @@ const priceValidity = (evt) => {
 const dateValidity = (evt) => {
   const dateFromInput = evt.target.querySelector('[name=event-start-time]');
   const dateToInput = evt.target.querySelector('[name=event-end-time]');
-  // const priceInput = evt.target.querySelector('.event__input--price');
 
   if (dateFromInput.value > dateToInput.value) {
     dateToInput.setCustomValidity('no no no');
