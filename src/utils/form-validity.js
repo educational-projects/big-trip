@@ -26,13 +26,16 @@ const dateValidity = (evt) => {
   const dateFromInput = evt.target.querySelector('[name=event-start-time]');
   const dateToInput = evt.target.querySelector('[name=event-end-time]');
 
+  dateToInput.removeAttribute('readonly');
+
   if (dateFromInput.value > dateToInput.value) {
-    dateToInput.setCustomValidity('no no no');
+    dateToInput.setCustomValidity('please enter the correct completion date');
   } else {
     dateToInput.setCustomValidity('');
   }
 
   dateToInput.reportValidity();
+  dateFromInput.setAttribute('readonly', true);
 };
 
 export const formValidity = (evt) => {

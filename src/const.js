@@ -50,17 +50,3 @@ export const CanvasType = {
   TYPE: 'type',
   TIME: 'time-spend',
 };
-
-export const BLANK_POINT = {
-  type: 'taxi',
-  basePrice: '',
-  dateFrom: new Date(),
-  dateTo: new Date(),
-  offer: [],
-  destination: {
-    description: '',
-    name: '',
-    pictures: [],
-  },
-  isFavorite: false,
-};
