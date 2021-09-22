@@ -3,12 +3,25 @@ import { getFirstLetterInCapitalLetters } from '../../utils/common';
 import flatpickr from 'flatpickr';
 import SmartView from '../smart';
 import { formValidity } from '../../utils/form-validity';
-import { BLANK_POINT } from '../../const';
 import { createAdditionalOffer } from './edit-point-offers';
 import { createDestinationTemplate } from './edit-point-destinations';
 
 import '../../../node_modules/flatpickr/dist//flatpickr.min.css';
 import { createCityList, createContentButton, createEventRollupButtonTemplate, createEventTypeList } from './edit-point-helpers';
+
+const BLANK_POINT = {
+  type: 'taxi',
+  basePrice: '',
+  dateFrom: new Date(),
+  dateTo: new Date(),
+  offer: [],
+  destination: {
+    description: '',
+    name: '',
+    pictures: [],
+  },
+  isFavorite: false,
+};
 
 const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
   const {type, basePrice, dateFrom, dateTo, destination, offer, id, isDisabled, isSaving, isDeleting} = data;
