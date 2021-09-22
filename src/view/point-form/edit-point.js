@@ -1,123 +1,34 @@
 import dayjs from 'dayjs';
-import { getFirstLetterInCapitalLetters } from '../utils/common';
+import { getFirstLetterInCapitalLetters } from '../../utils/common';
 import flatpickr from 'flatpickr';
-import SmartView from './smart';
-import { nanoid } from 'nanoid';
-import { formValidity } from '../utils/form-validity';
+import SmartView from '../smart';
+import { formValidity } from '../../utils/form-validity';
+import { BLANK_POINT } from '../../const';
+import { createAdditionalOffer } from './edit-point-offers';
+import { createDestinationTemplate } from './edit-point-destinations';
 
-import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-
-const BLANK_POINT = {
-  type: 'taxi',
-  basePrice: '',
-  dateFrom: new Date(),
-  dateTo: new Date(),
-  id: nanoid(),
-  offer: [],
-  destination: {
-    description: '',
-    name: '',
-    pictures: [],
-  },
-  isFavorite: false,
-
-};
-
-const createEventRollupButtonTemplate = (isNewEvent) => (
-  `${!isNewEvent ? `<button class="event__rollup-btn" type="button">
-    <span class="visually-hidden">Open event</span>
-  </button>`: ''}`
-);
-
-const createContentButton = (isNewEvent) => (
-  `${isNewEvent ? 'Cancel' : 'Delete'}`
-);
-
-//генерация дополнительных опций
-const createAdditionalOffer = (checkedOffers, availableOffers, id) => {
-  // console.log(availableOffers);
-  const getOffersChecked = (offerTitle) => checkedOffers
-    .map(({title}) => title.toLowerCase())
-    .includes(offerTitle.toLowerCase()) ? 'checked' : '' ;
-
-  if (availableOffers.length) {
-    return  `<section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-    <div class="event__available-offers">
-    ${availableOffers.map(({title, price}) => `<div class="event__offer-selector">
-    <input class="event__offer-checkbox  visually-hidden" data-title="${title.toLowerCase()}" data-price="${price}" id="event-offer-${title}-${id}" type="checkbox" name="event-offer-${title}" ${getOffersChecked(title)}>
-    <label class="event__offer-label" for="event-offer-${title}-${id}">
-      <span class="event__offer-title">${title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${price}</span>
-    </label>
-  </div>`).join('')}
-    </div>
-  </section>`;
-  }
-  return '';
-};
-
-const createDestinationTemplate = (destination) => {
-  const {description, pictures} = destination;
-
-  const createDestinationPhoto = () => {
-    if (pictures !== 0) {
-      return `<div class="event__photos-container">
-    <div class="event__photos-tape">
-      ${pictures.map(({src, descriptionPhoto}) => `<img class="event__photo" src="${src}" alt="${descriptionPhoto}">`).join('')}
-    </div>
-  </div>`;}
-  };
-
-  if (destination.name) {
-    return `<section class="event__section  event__section--destination">
-    <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-    <p class="event__destination-description">${description}</p>
-    ${createDestinationPhoto()}
-  </section>`;
-  }
-  return '';
-};
-
-//генерация опций города
-const createCityList = (destinations) => (
-  destinations.map(({name}) => (
-    `<option value="${name}"></option>`
-  )).join('')
-);
-
-//генерация тайп-листа
-const createEventTypeList = (offers ,id) => (
-  offers.map(({type}) => `<div class="event__type-item">
-      <input id="event-type-${type}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}">
-      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-${id}">${type}</label>
-    </div>`).join('')
-);
+import '../../../node_modules/flatpickr/dist//flatpickr.min.css';
+import { createCityList, createContentButton, createEventRollupButtonTemplate, createEventTypeList } from './edit-point-helpers';
 
 const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
-  const {type, basePrice, dateFrom, dateTo, destination, offer, id} = data;
+  const {type, basePrice, dateFrom, dateTo, destination, offer, id, isDisabled, isSaving, isDeleting} = data;
 
   const availableOffersByType = AllOffers.find((offerdd) => offerdd.type === type.toLowerCase()).offers;
 
   const dateToInDateValue = dayjs(dateTo).format('DD/MM/YY HH:mm');
   const dateFromInDateValue = dayjs(dateFrom).format('DD/MM/YY HH:mm');
 
-  //генерация опций города
   const cityList = createCityList(Alldestinations);
 
-  //генерация тайп-листа
   const eventTypeList = createEventTypeList(AllOffers ,id);
 
-  //генерация дополнительных опций
-  const additionalOffers = createAdditionalOffer(offer, availableOffersByType, id);
+  const additionalOffers = createAdditionalOffer(offer, availableOffersByType, id, isDisabled);
 
   const destinationList = createDestinationTemplate(destination);
 
-  const eventRollupButton = createEventRollupButtonTemplate(isNewEvent);
+  const eventRollupButton = createEventRollupButtonTemplate(isNewEvent, isDisabled);
 
-  const buttonText = createContentButton(isNewEvent);
+  const buttonText = createContentButton(isNewEvent, isDeleting);
 
   return `<li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -127,7 +38,7 @@ const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
         <span class="visually-hidden">Choose event type</span>
         <img class="event__type-icon" width="17" height="17" src="img/icons/${type.toLowerCase()}.png" alt="Event ${type} icon">
       </label>
-      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox">
+      <input class="event__type-toggle  visually-hidden" id="event-type-toggle-${id}" type="checkbox" ${isDisabled? 'disabled' : ''}>
 
       <div class="event__type-list">
         <fieldset class="event__type-group">
@@ -142,7 +53,7 @@ const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${destination.name}" list="destination-list-${id}" ${isDisabled? 'disabled' : ''}>
       <datalist id="destination-list-${id}">
         ${cityList}
       </datalist>
@@ -150,10 +61,10 @@ const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
 
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateFromInDateValue}">
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateFromInDateValue}" ${isDisabled? 'disabled' : ''}>
       &mdash;
       <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateToInDateValue}">
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateToInDateValue}" ${isDisabled? 'disabled' : ''}>
     </div>
 
     <div class="event__field-group  event__field-group--price">
@@ -161,11 +72,11 @@ const createEditPointForm = (data, AllOffers, Alldestinations, isNewEvent) => {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}" ${isDisabled? 'disabled' : ''}>
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-    <button class="event__reset-btn" type="reset">${buttonText}</button>
+    <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled? 'disabled' : ''}>${isSaving? 'Saving...' : 'Save'}</button>
+    <button class="event__reset-btn" type="reset" ${isDisabled? 'disabled' : ''}>${buttonText}</button>
     ${eventRollupButton}
   </header>
   <section class="event__details">
@@ -407,6 +318,11 @@ export default class EditEvent extends SmartView {
     return Object.assign(
       {},
       point,
+      {
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      },
     );
   }
 
@@ -415,6 +331,11 @@ export default class EditEvent extends SmartView {
       {},
       data,
     );
+
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
+
     return data;
   }
 }

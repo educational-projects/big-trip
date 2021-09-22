@@ -1,11 +1,17 @@
 import TripEventView from '../view/trip-event';
-import EditEventView from '../view/edit-point';
+import EditEventView from '../view/point-form/edit-point';
 import { remove, render, RenderPosition, replace } from '../utils/redner';
 import { UserAction, UpdateType } from '../const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
+};
+
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
 };
 
 export default class Point {
@@ -52,6 +58,7 @@ export default class Point {
 
     if(this._mode === Mode.EDITING) {
       replace(this._pointEditComponent, prevPointEditComponent);
+      this.mode === Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -67,6 +74,39 @@ export default class Point {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToPoint();
+    }
+  }
+
+  setViewState(state) {
+    if (this._mode === Mode.DEFAULT) {
+      return;
+    }
+
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    switch(state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._pointComponent.shake(resetFormState);
+        this._pointEditComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -131,6 +171,5 @@ export default class Point {
       UpdateType.MINOR,
       point,
     );
-    this._replaceFormToPoint();
   }
 }

@@ -3,7 +3,7 @@ import TripEventListView from '../view/trip-event-list';
 import SortingView from '../view/sorting';
 import EmptyListView from '../view/empty-list';
 import { remove, render, RenderPosition } from '../utils/redner';
-import PointPresenter from './point';
+import PointPresenter, {State as PointPresenterViewState} from './point';
 import pointNewPresenter from './new-point';
 import { SortType, UserAction, UpdateType, FilterType } from '../const';
 import { sortPointDay, sortPointPrice, sortPointTime } from '../utils/point';
@@ -86,19 +86,34 @@ export default class Trip {
   _handleViewAction(actionType, updateType, update) {
     switch(actionType) {
       case UserAction.UPDATE_POINT:
-        this._api.updatePoint(update).then((response) => {
-          this._pointsModel.updatePoint(updateType, response);
-        });
+        this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.SAVING);
+        this._api.updatePoint(update)
+          .then((response) => {
+            this._pointsModel.updatePoint(updateType, response);
+          })
+          .catch(() => {
+            this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+          });
         break;
       case UserAction.ADD_POINT:
-        this._api.addPoint(update).then((response) => {
-          this._pointsModel.addPoint(updateType, response);
-        });
+        this._pointNewPresenter.setSaving();
+        this._api.addPoint(update)
+          .then((response) => {
+            this._pointsModel.addPoint(updateType, response);
+          })
+          .catch(() => {
+            this._pointNewPresenter.setAborting();
+          });
         break;
       case UserAction.DELETE_POINT:
-        this._api.deletePoint(update).then(() => {
-          this._pointsModel.deletePoint(updateType, update);
-        });
+        this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.DELETING);
+        this._api.deletePoint(update)
+          .then(() => {
+            this._pointsModel.deletePoint(updateType, update);
+          })
+          .catch(() => {
+            this._pointPresenter.get(update.id).setViewState(PointPresenterViewState.ABORTING);
+          });
         break;
     }
 
@@ -112,10 +127,8 @@ export default class Trip {
       case UpdateType.MINOR:
         this._clearTrip();
         this._renderTrip();
-        //обновить часть проекта
         break;
       case UpdateType.MAJOR:
-        //обновить проект полностью
         this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;
