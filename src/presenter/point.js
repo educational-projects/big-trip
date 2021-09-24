@@ -66,17 +66,6 @@ export default class Point {
 
   }
 
-  destroy() {
-    remove(this._pointComponent);
-    remove(this._pointEditComponent);
-  }
-
-  resetView() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._replaceFormToPoint();
-    }
-  }
-
   setViewState(state) {
     if (this._mode === Mode.DEFAULT) {
       return;
@@ -90,23 +79,25 @@ export default class Point {
       });
     };
 
-    switch(state) {
-      case State.SAVING:
-        this._pointEditComponent.updateData({
-          isDisabled: true,
-          isSaving: true,
-        });
-        break;
-      case State.DELETING:
-        this._pointEditComponent.updateData({
-          isDisabled: true,
-          isDeleting: true,
-        });
-        break;
-      case State.ABORTING:
-        this._pointComponent.shake(resetFormState);
-        this._pointEditComponent.shake(resetFormState);
-        break;
+    if(state === State.ABORTING) {
+      this._pointComponent.shake(resetFormState);
+      this._pointEditComponent.shake(resetFormState);
+    } else {
+      this._pointEditComponent.updateData({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointEditComponent);
+  }
+
+  resetView() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._replaceFormToPoint();
     }
   }
 

@@ -34,18 +34,6 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
-  _handleModelEvent() {
-    this.init();
-  }
-
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
-      return;
-    }
-
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
   _getFilters() {
     const points = this._pointsModel.getPoints();
 
@@ -63,5 +51,17 @@ export default class Filter {
         count: filter[FilterType.PAST](points).length,
       },
     ];
+  }
+
+  _handleModelEvent() {
+    this.init();
+  }
+
+  _handleFilterTypeChange(filterType) {
+    if (this._filterModel.getFilter() === filterType) {
+      return;
+    }
+
+    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 }

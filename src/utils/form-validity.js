@@ -1,4 +1,4 @@
-const cityValidity = (evt) => {
+const checkCityValidity = (evt) => {
   const cityInput = evt.target.querySelector('.event__input--destination');
 
   if (!cityInput.value) {
@@ -10,7 +10,7 @@ const cityValidity = (evt) => {
   cityInput.reportValidity();
 };
 
-const priceValidity = (evt) => {
+const checkPriceValidity = (evt) => {
   const priceInput = evt.target.querySelector('.event__input--price');
 
   if (!priceInput.value) {
@@ -22,7 +22,7 @@ const priceValidity = (evt) => {
   priceInput.reportValidity();
 };
 
-const dateValidity = (evt) => {
+const checkDateValidity = (evt) => {
   const dateFromInput = evt.target.querySelector('[name=event-start-time]');
   const dateToInput = evt.target.querySelector('[name=event-end-time]');
 
@@ -38,8 +38,8 @@ const dateValidity = (evt) => {
   dateFromInput.setAttribute('readonly', true);
 };
 
-export const formValidity = (evt) => {
-  cityValidity(evt);
-  priceValidity(evt);
-  dateValidity(evt);
+export const checkFormValidity = (evt) => {
+  checkCityValidity(evt);
+  checkPriceValidity(evt);
+  checkDateValidity(evt);
 };

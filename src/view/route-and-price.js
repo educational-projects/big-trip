@@ -1,6 +1,10 @@
 import AbstractView from './abstract';
 import dayjs from 'dayjs';
 
+const datePerMonth = 'MMM';
+const datePerDay = 'DD';
+const datePerMonthAdnDay = 'MMM DD';
+
 const showWay = (points) => {
   if (points.length >= 4) {
     return `${points[0].destination.name} — ... — ${points[points.length -1].destination.name}`;
@@ -12,12 +16,12 @@ const showDate = (points) => {
   const startData = points[0].dateFrom;
   const endData = points[points.length - 1].dateTo;
 
-  const startMonth = dayjs(startData).format('MMM');
-  const endMonth = dayjs(endData).format('MMM');
+  const startMonth = dayjs(startData).format(datePerMonth);
+  const endMonth = dayjs(endData).format(datePerMonth);
 
-  const isOneMonth = startMonth === endMonth ? 'DD' : 'MMM DD';
+  const isOneMonth = startMonth === endMonth ? datePerDay : datePerMonthAdnDay;
 
-  return `${dayjs(startData).format('MMM DD')} — ${dayjs(endData).format(isOneMonth)}`;
+  return `${dayjs(startData).format(datePerMonthAdnDay)} — ${dayjs(endData).format(isOneMonth)}`;
 };
 
 const getTotalPrice = (points) => points.reduce((sumPoints, point) => {

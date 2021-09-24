@@ -31,21 +31,6 @@ export default class PointNew {
     document.addEventListener('keydown', this._escKeyDownHandler);
   }
 
-  destroy() {
-    if (this._pointEditComponent === null) {
-      return;
-    }
-
-    if (this._destroyCallback !== null) {
-      this._destroyCallback();
-    }
-
-    remove(this._pointEditComponent);
-    this._pointEditComponent = null;
-
-    document.removeEventListener('keydown', this._escKeyDownHandler);
-  }
-
   setSaving() {
     this._pointEditComponent.updateData({
       isDisabled: true,
@@ -63,6 +48,21 @@ export default class PointNew {
     };
 
     this._pointEditComponent.shake(resetFormState);
+  }
+
+  destroy() {
+    if (this._pointEditComponent === null) {
+      return;
+    }
+
+    if (this._destroyCallback !== null) {
+      this._destroyCallback();
+    }
+
+    remove(this._pointEditComponent);
+    this._pointEditComponent = null;
+
+    document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 
   _handleFormSubmit(point) {
